@@ -1,3 +1,4 @@
+using portfolio.Data;
 using Npgsql;
 
 
@@ -15,6 +16,7 @@ if (string.IsNullOrWhiteSpace(connectionString))
 }
 var dataSource = NpgsqlDataSource.Create(connectionString);
 builder.Services.AddSingleton(dataSource);
+builder.Services.AddScoped<ProjectRepository>();
 
 
 var app = builder.Build();
