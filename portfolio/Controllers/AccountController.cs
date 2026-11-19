@@ -10,7 +10,6 @@ using System.Text;
 
 namespace portfolio.Controllers;
 
-[AllowAnonymous]
 public class AccountController : Controller
 {
     private readonly IConfiguration _configuration;
@@ -20,6 +19,7 @@ public class AccountController : Controller
         _configuration = configuration;
     }
 
+    [AllowAnonymous]
     [HttpGet]
     public IActionResult Login(string? returnUrl = null)
     {
@@ -27,6 +27,7 @@ public class AccountController : Controller
         return View();
     }
 
+    [AllowAnonymous]
     [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Login(

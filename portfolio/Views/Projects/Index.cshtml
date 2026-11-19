@@ -93,6 +93,13 @@ else
                                             Edit
                                         </a>
 
+                                        <a asp-controller="Projects"
+                                           asp-action="UploadImage"
+                                           asp-route-projectId="@project.ProjectId"
+                                           class="btn btn-sm btn-outline-success">
+                                            Upload Image
+                                        </a>
+
                                         <form asp-controller="Projects"
                                               asp-action="Delete"
                                               asp-route-id="@project.ProjectId"

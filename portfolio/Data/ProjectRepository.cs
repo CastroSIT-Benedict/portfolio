@@ -222,5 +222,40 @@ namespace portfolio.Data
 
             await command.ExecuteNonQueryAsync();
         }
+
+
+        public async Task<List<ProjectImage>> GetImagesByProjectAsync(long projectId)
+        {
+            const string sql = """
+        SELECT image_id, project_id, image_url, caption, display_order
+        FROM portfolio.project_image
+        WHERE project_id = @project_id
+        ORDER BY display_order, image_id;
+        """;
+
+            var images = new List<ProjectImage>();
+
+            await using var connection = await _dataSource.OpenConnectionAsync();
+            await using var command = new NpgsqlCommand(sql, connection);
+
+            command.Parameters.AddWithValue("project_id", projectId);
+
+            await using var reader = await command.ExecuteReaderAsync();
+
+            while (await reader.ReadAsync())
+            {
+                images.Add(new ProjectImage
+                {
+                    ImageId = reader.GetInt64(0),
+                    ProjectId = reader.GetInt64(1),
+                    ImageUrl = reader.GetString(2),
+                    Caption = reader.IsDBNull(3) ? null : reader.GetString(3),
+                    DisplayOrder = reader.GetInt32(4)
+                });
+            }
+
+            return images;
+        }
+
     }
 }
