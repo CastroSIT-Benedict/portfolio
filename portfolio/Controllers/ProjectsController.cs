@@ -13,7 +13,7 @@ public class ProjectsController : Controller
         _projects = projects;
     }
 
-    // GET /Books : the list of books.
+    
     public async Task<IActionResult> Index()
     {
         var projects = await _projects.GetAllAsync();

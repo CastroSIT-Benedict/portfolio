@@ -1,0 +1,66 @@
+﻿
+@model portfolio.Models.Course
+
+@{
+    ViewData["Title"] = "Add Course";
+}
+
+<h1 class="mb-2">Add Course</h1>
+<p class="text-muted mb-4">
+    Enter the course code and its full name.
+</p>
+
+<div class="row">
+    <div class="col-md-6">
+        <form asp-controller="Courses"
+              asp-action="Create"
+              method="post">
+
+            <div asp-validation-summary="ModelOnly"
+                 class="text-danger mb-3">
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="CourseCode" class="form-label">
+                    Course Code
+                </label>
+
+                <input asp-for="CourseCode"
+                       class="form-control"
+                       placeholder="e.g. DBMWEB1" />
+
+                <span asp-validation-for="CourseCode"
+                      class="text-danger">
+                </span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="CourseName" class="form-label">
+                    Course Name
+                </label>
+
+                <input asp-for="CourseName"
+                       class="form-control"
+                       placeholder="e.g. Database Management and Web Development 1" />
+
+                <span asp-validation-for="CourseName"
+                      class="text-danger">
+                </span>
+            </div>
+
+            <button type="submit" class="btn btn-primary">
+                Save Course
+            </button>
+
+            <a asp-controller="Courses"
+               asp-action="Index"
+               class="btn btn-outline-secondary">
+                Cancel
+            </a>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

@@ -21,6 +21,7 @@ var dataSource = NpgsqlDataSource.Create(connectionString);
 
 builder.Services.AddSingleton(dataSource);
 builder.Services.AddScoped<ProjectRepository>();
+builder.Services.AddScoped<CourseRepository>();
 builder.Services.AddHttpClient<SupabaseStorageService>();
 
 // Authentication: use cookies for the editor login.
