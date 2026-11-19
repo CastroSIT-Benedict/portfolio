@@ -61,5 +61,32 @@ namespace portfolio.Data
 
             return projects;
         }
+
+
+        public async Task AddImageAsync(
+            long projectId,
+            string imageUrl,
+            string? caption,
+            int displayOrder)
+        {
+            const string sql = @"
+        INSERT INTO portfolio.project_image
+            (project_id, image_url, caption, display_order)
+        VALUES
+            (@project_id, @image_url, @caption, @display_order);
+    ";
+
+            await using var command = _dataSource.CreateCommand(sql);
+
+            command.Parameters.AddWithValue("project_id", projectId);
+            command.Parameters.AddWithValue("image_url", imageUrl);
+            command.Parameters.AddWithValue(
+                "caption",
+                (object?)caption ?? DBNull.Value);
+            command.Parameters.AddWithValue("display_order", displayOrder);
+
+            await command.ExecuteNonQueryAsync();
+        }
+
     }
 }

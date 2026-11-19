@@ -13,6 +13,34 @@
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container-fluid">
+                @if (User.IsInRole("Editor"))
+                {
+                    <span class="nav-link">
+                        <i class="bi bi-person-check"></i>
+                        Editor
+                    </span>
+
+                    <form asp-controller="Account"
+                          asp-action="Logout"
+                          method="post">
+                        <button type="submit" class="btn btn-outline-danger btn-sm">
+                            Logout
+                        </button>
+                    </form>
+                }
+                else
+                {
+                    <span class="nav-link">
+                        <i class="bi bi-eye"></i>
+                        Viewer
+                    </span>
+
+                    <a asp-controller="Account"
+                       asp-action="Login"
+                       class="nav-link">
+                        Login
+                    </a>
+                }
                 <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">portfolio</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
