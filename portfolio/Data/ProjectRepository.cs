@@ -257,5 +257,52 @@ namespace portfolio.Data
             return images;
         }
 
+
+        public async Task<ProjectImage?> GetImageByIdAsync(long imageId)
+        {
+            const string sql = """
+        SELECT image_id, project_id, image_url, caption, display_order
+        FROM portfolio.project_image
+        WHERE image_id = @image_id;
+        """;
+
+            await using var connection = await _dataSource.OpenConnectionAsync();
+            await using var command = new NpgsqlCommand(sql, connection);
+
+            command.Parameters.AddWithValue("image_id", imageId);
+
+            await using var reader = await command.ExecuteReaderAsync();
+
+            if (!await reader.ReadAsync())
+            {
+                return null;
+            }
+
+            return new ProjectImage
+            {
+                ImageId = reader.GetInt64(0),
+                ProjectId = reader.GetInt64(1),
+                ImageUrl = reader.GetString(2),
+                Caption = reader.IsDBNull(3) ? null : reader.GetString(3),
+                DisplayOrder = reader.GetInt32(4)
+            };
+        }
+
+        public async Task DeleteImageAsync(long imageId)
+        {
+            const string sql = """
+        DELETE FROM portfolio.project_image
+        WHERE image_id = @image_id;
+        """;
+
+            await using var connection = await _dataSource.OpenConnectionAsync();
+            await using var command = new NpgsqlCommand(sql, connection);
+
+            command.Parameters.AddWithValue("image_id", imageId);
+
+            await command.ExecuteNonQueryAsync();
+        }
+
+
     }
 }

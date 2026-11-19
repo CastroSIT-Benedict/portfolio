@@ -27,6 +27,13 @@ public class ProjectsController : Controller
     public async Task<IActionResult> Index()
     {
         var projects = await _projects.GetAllAsync();
+
+        foreach (var project in projects)
+        {
+            project.Images = await _projects.GetImagesByProjectAsync(
+                project.ProjectId);
+        }
+
         return View(projects);
     }
 
@@ -221,4 +228,37 @@ public class ProjectsController : Controller
 
         return RedirectToAction(nameof(Index));
     }
+
+
+    [Authorize(Roles = "Editor")]
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> DeleteImage(long imageId)
+    {
+        var image = await _projects.GetImageByIdAsync(imageId);
+
+        if (image == null)
+        {
+            return NotFound();
+        }
+
+        try
+        {
+            // Delete the actual file from Supabase Storage.
+            await _storage.DeleteAsync(image.ImageUrl);
+
+            // Delete its database record.
+            await _projects.DeleteImageAsync(imageId);
+
+            TempData["Success"] = "Image deleted successfully.";
+        }
+        catch (HttpRequestException)
+        {
+            TempData["Error"] =
+                "The image could not be deleted from storage. Please try again.";
+        }
+
+        return RedirectToAction(nameof(Index));
+    }
+
 }

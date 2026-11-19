@@ -84,5 +84,56 @@ public class SupabaseStorageService
             $"{_supabaseUrl.TrimEnd('/')}/storage/v1/object/public/{bucket}/{encodedPath}";
 
         return (objectPath, publicUrl);
+
+
+
+
     }
+
+
+    public async Task DeleteAsync(string publicUrl)
+    {
+        string publicPrefix =
+            $"{_supabaseUrl.TrimEnd('/')}/storage/v1/object/public/{Uri.EscapeDataString(_bucket)}/";
+
+        // Make sure the URL belongs to our configured bucket.
+        if (!publicUrl.StartsWith(publicPrefix, StringComparison.OrdinalIgnoreCase))
+        {
+            throw new InvalidOperationException(
+                "The image URL does not belong to the configured storage bucket.");
+        }
+
+        string objectPath = publicUrl.Substring(publicPrefix.Length);
+
+        if (string.IsNullOrWhiteSpace(objectPath))
+        {
+            throw new InvalidOperationException("Invalid image path.");
+        }
+
+        string bucket = Uri.EscapeDataString(_bucket);
+
+        string encodedPath = string.Join(
+            "/",
+            objectPath.Split('/').Select(segment =>
+                Uri.EscapeDataString(Uri.UnescapeDataString(segment))));
+
+        string deleteUrl =
+            $"{_supabaseUrl.TrimEnd('/')}/storage/v1/object/{bucket}/{encodedPath}";
+
+        using var request = new HttpRequestMessage(
+            HttpMethod.Delete, deleteUrl);
+
+        request.Headers.Add("apikey", _secretKey);
+
+        using var response = await _httpClient.SendAsync(request);
+
+        if (!response.IsSuccessStatusCode)
+        {
+            string error = await response.Content.ReadAsStringAsync();
+
+            throw new HttpRequestException(
+                $"Image deletion failed: {error}");
+        }
+    }
+
 }
