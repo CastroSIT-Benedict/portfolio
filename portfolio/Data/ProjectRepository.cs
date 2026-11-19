@@ -24,24 +24,30 @@ namespace portfolio.Data
                 Description = reader.IsDBNull(3) ? null : reader.GetString(3),
                 VideoUrl = reader.IsDBNull(4) ? null : reader.GetString(4),
                 GithubUrl = reader.IsDBNull(5) ? null : reader.GetString(5),
-                ProjectDate = reader.IsDBNull(6) ? null : reader.GetFieldValue<DateOnly>(6)
+                ProjectDate = reader.IsDBNull(6) ? null : reader.GetFieldValue<DateOnly>(6),
+                CourseName = reader.GetString(7),
+                CourseCode = reader.GetString(8)
             };
         }
 
         public async Task<List<Project>> GetAllAsync()
         {
             const string sql = @"
-                SELECT
-                    project_id,
-                    course_id,
-                    title,
-                    description,
-                    video_url,
-                    github_url,
-                    project_date
-                FROM portfolio.project
-                ORDER BY project_id;
-                ";
+        SELECT
+            p.project_id,
+            p.course_id,
+            p.title,
+            p.description,
+            p.video_url,
+            p.github_url,
+            p.project_date,
+            c.course_name,
+            c.course_code
+        FROM portfolio.project p
+        INNER JOIN portfolio.course c
+            ON p.course_id = c.course_id
+        ORDER BY c.course_code, p.project_id;
+    ";
 
             var projects = new List<Project>();
 

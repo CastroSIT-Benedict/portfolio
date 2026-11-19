@@ -12,5 +12,7 @@
 
         public string CourseName { get; set; } = "";
         public List<ProjectImage> Images { get; set; } = new();
+
+        public string CourseCode { get; set; } = "";
     }
 }
