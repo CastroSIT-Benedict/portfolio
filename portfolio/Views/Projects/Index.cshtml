@@ -14,11 +14,19 @@
 
     @if (User.IsInRole("Editor"))
     {
-        <a asp-controller="Courses"
-           asp-action="Index"
-           class="btn btn-outline-primary">
-            Manage Courses
-        </a>
+        <div class="d-flex gap-2">
+            <a asp-controller="Courses"
+               asp-action="Index"
+               class="btn btn-outline-primary">
+                Manage Courses
+            </a>
+
+            <a asp-controller="Projects"
+               asp-action="Create"
+               class="btn btn-primary">
+                Add Project
+            </a>
+        </div>
     }
 </div>
 
@@ -56,9 +64,47 @@ else
 
                                 @if (!string.IsNullOrEmpty(project.GithubUrl))
                                 {
-                                    <a href="@project.GithubUrl" target="_blank">
+                                    <a href="@project.GithubUrl"
+                                       target="_blank"
+                                       rel="noopener noreferrer">
                                         View GitHub
                                     </a>
+                                }
+
+                                @if (!string.IsNullOrEmpty(project.VideoUrl))
+                                {
+                                    <a href="@project.VideoUrl"
+                                       target="_blank"
+                                       rel="noopener noreferrer"
+                                       class="ms-2">
+                                        View Video
+                                    </a>
+                                }
+
+                                @if (User.IsInRole("Editor"))
+                                {
+                                    <hr />
+
+                                    <div class="d-flex gap-2">
+                                        <a asp-controller="Projects"
+                                           asp-action="Edit"
+                                           asp-route-id="@project.ProjectId"
+                                           class="btn btn-sm btn-outline-primary">
+                                            Edit
+                                        </a>
+
+                                        <form asp-controller="Projects"
+                                              asp-action="Delete"
+                                              asp-route-id="@project.ProjectId"
+                                              method="post"
+                                              onsubmit="return confirm('Are you sure you want to delete this project?');">
+
+                                            <button type="submit"
+                                                    class="btn btn-sm btn-outline-danger">
+                                                Delete
+                                            </button>
+                                        </form>
+                                    </div>
                                 }
                             </div>
                         </div>
