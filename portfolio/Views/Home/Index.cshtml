@@ -1,8 +1,642 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Home";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<section class="hero-section" id="top">
+
+
+
+    <!-- BACKGROUND DECORATIONS -->
+    <div class="hero-grid"></div>
+    <div class="hero-glow"></div>
+    <div class="hero-orbit"></div>
+
+    <div class="hero-content">
+
+        <!-- LEFT: INTRODUCTION -->
+        <div class="hero-text">
+
+            <div class="hero-eyebrow">
+                <span class="hero-status-dot"></span>
+                AVAILABLE FOR OPPORTUNITIES
+            </div>
+
+            <p class="hero-greeting">
+                HELLO, I'M
+            </p>
+
+            <h1 class="hero-name">
+                YOUR<br />
+                <span>NAME.</span>
+            </h1>
+
+            <div class="hero-role">
+                <span class="role-prefix">I'M A</span>
+                <span id="rotating-role" class="role-highlight">
+                    DEVELOPER
+                </span>
+                <span class="role-cursor"></span>
+            </div>
+
+            <p class="hero-description">
+                [WRITE A SHORT INTRODUCTION ABOUT YOURSELF HERE.
+                DESCRIBE WHAT YOU DO, WHAT YOU ENJOY BUILDING,
+                AND WHAT YOU ARE PASSIONATE ABOUT.]
+            </p>
+
+            <div class="hero-buttons">
+
+                <a asp-controller="Projects"
+                   asp-action="Index"
+                   class="hero-button hero-button-primary">
+                    View My Projects
+                    <span class="button-arrow">↗</span>
+                </a>
+
+                <a href="#contact"
+                   class="hero-button hero-button-secondary">
+                    Contact Me
+                </a>
+
+            </div>
+
+            <div class="hero-social">
+                <span class="social-label">FIND ME ON</span>
+
+                <a href="https://github.com/YOUR-USERNAME"
+                   target="_blank"
+                   rel="noopener noreferrer">
+                    GITHUB ↗
+                </a>
+
+                <a href="https://linkedin.com/in/YOUR-USERNAME"
+                   target="_blank"
+                   rel="noopener noreferrer">
+                    LINKEDIN ↗
+                </a>
+            </div>
+
+        </div>
+
+        <!-- RIGHT: PORTRAIT -->
+        <div class="hero-portrait">
+
+            <div class="portrait-background"></div>
+
+            <div class="portrait-image">
+                <img src="~/images/portrait.png"
+                     alt="Portrait of YOUR NAME"
+                     asp-append-version="true" />
+            </div>
+
+            <!-- DECORATIVE LABELS -->
+            <div class="portrait-label portrait-label-top">
+                <span class="label-line"></span>
+                PORTFOLIO / 2026
+            </div>
+
+            <div class="portrait-label portrait-label-bottom">
+                <span class="portrait-number">01</span>
+                <span>CREATIVE MIND. TECHNICAL THINKING.</span>
+            </div>
+
+            <div class="portrait-corner portrait-corner-top"></div>
+            <div class="portrait-corner portrait-corner-bottom"></div>
+
+        </div>
+
+    </div>
+
+    <!-- SCROLL INDICATOR -->
+    <a href="#about" class="hero-scroll">
+        <span class="scroll-line"></span>
+        SCROLL TO EXPLORE
+        <span class="scroll-arrow">↓</span>
+    </a>
+
+    <div class="hero-index">01 / 05</div>
+
+
+</section>
+
+
+<!-- ========================================
+     ABOUT ME
+======================================== -->
+
+<section class="about-section" id="about">
+
+    <div class="about-container">
+
+        <!-- SECTION HEADING -->
+        <div class="section-heading">
+            <span class="section-label">01 / GET TO KNOW ME</span>
+            <h2>A LITTLE <span>ABOUT ME.</span></h2>
+            <p>A quick introduction to the person behind the code.</p>
+        </div>
+
+        <div class="about-content">
+
+            <!-- LEFT: INTRODUCTION -->
+            <div class="about-intro">
+
+                <span class="about-greeting">WHO AM I?</span>
+
+                <h3>
+                    More than just
+                    <span>lines of code.</span>
+                </h3>
+
+                <p>
+                    [WRITE A SHORT INTRODUCTION ABOUT YOURSELF.
+                    TALK ABOUT YOUR BACKGROUND, YOUR INTEREST IN
+                    TECHNOLOGY, AND HOW YOU GOT INTO PROGRAMMING.]
+                </p>
+
+                <p>
+                    [ADD ANOTHER SHORT PARAGRAPH ABOUT YOUR PERSONALITY,
+                    WHAT YOU ENJOY LEARNING, OR WHAT YOU HOPE TO ACHIEVE
+                    AS A DEVELOPER.]
+                </p>
+
+                <div class="about-signature">
+                    <span class="signature-line"></span>
+                    <span>ALWAYS LEARNING. ALWAYS BUILDING.</span>
+                </div>
+
+            </div>
+
+            <!-- RIGHT: PROFILE DASHBOARD -->
+            <div class="about-dashboard">
+
+                <div class="about-card">
+                    <div class="about-card-icon">⌘</div>
+                    <span class="about-card-label">CURRENT FOCUS</span>
+                    <h4>[YOUR CURRENT FOCUS]</h4>
+                    <p>[E.G. WEB DEVELOPMENT, BACKEND PROGRAMMING]</p>
+                    <span class="about-card-number">01</span>
+                </div>
+
+                <div class="about-card">
+                    <div class="about-card-icon">⌖</div>
+                    <span class="about-card-label">LOCATION</span>
+                    <h4>[YOUR LOCATION]</h4>
+                    <p>[YOUR COUNTRY OR REGION]</p>
+                    <span class="about-card-number">02</span>
+                </div>
+
+                <div class="about-card">
+                    <div class="about-card-icon">✳</div>
+                    <span class="about-card-label">INTERESTS</span>
+                    <h4>[YOUR INTERESTS]</h4>
+                    <p>[E.G. TECHNOLOGY, DESIGN, PROBLEM SOLVING]</p>
+                    <span class="about-card-number">03</span>
+                </div>
+
+                <div class="about-card">
+                    <div class="about-card-icon">⌁</div>
+                    <span class="about-card-label">MY APPROACH</span>
+                    <h4>[YOUR DEVELOPMENT PHILOSOPHY]</h4>
+                    <p>[E.G. BUILDING USEFUL THINGS AND LEARNING THROUGH EXPERIENCE]</p>
+                    <span class="about-card-number">04</span>
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- BOTTOM DECORATIVE LINE -->
+        <div class="about-bottom-line">
+            <span>END OF INTRODUCTION</span>
+            <span>02 — 05</span>
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- ========================================
+     TECHNICAL SKILLS
+======================================== -->
+
+<section class="skills-section" id="skills">
+
+    <div class="skills-container">
+
+        <!-- SECTION HEADING -->
+        <div class="section-heading">
+            <span class="section-label">02 / WHAT I WORK WITH</span>
+            <h2>MY TECHNICAL <span>ARSENAL.</span></h2>
+            <p>Technologies and tools I use to bring ideas to life.</p>
+        </div>
+
+        <!-- SKILL CATEGORIES -->
+        <div class="skills-grid">
+
+            <!-- PROGRAMMING LANGUAGES -->
+            <div class="skill-category">
+
+                <div class="skill-category-header">
+                    <span class="skill-category-icon">&lt;/&gt;</span>
+                    <span class="skill-category-number">01</span>
+                </div>
+
+                <span class="skill-category-label">01 / FUNDAMENTALS</span>
+                <h3>Programming Languages</h3>
+                <p class="skill-category-description">
+                    Languages I use to build logic and solve problems.
+                </p>
+
+                <div class="skill-list">
+
+                    <div class="skill-item">
+                        <span class="skill-logo">C#</span>
+                        <span>C#</span>
+                    </div>
+
+                    <div class="skill-item">
+                        <span class="skill-logo">PY</span>
+                        <span>Python</span>
+                    </div>
+
+                    <div class="skill-item">
+                        <span class="skill-logo">JS</span>
+                        <span>JavaScript</span>
+                    </div>
+
+                    <div class="skill-item">
+                        <span class="skill-logo">JV</span>
+                        <span>Java</span>
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- FRAMEWORKS & LIBRARIES -->
+            <div class="skill-category">
+
+                <div class="skill-category-header">
+                    <span class="skill-category-icon">◈</span>
+                    <span class="skill-category-number">02</span>
+                </div>
+
+                <span class="skill-category-label">02 / DEVELOPMENT</span>
+                <h3>Frameworks &amp; Libraries</h3>
+                <p class="skill-category-description">
+                    Frameworks and libraries I use to develop applications.
+                </p>
+
+                <div class="skill-list">
+
+                    <div class="skill-item">
+                        <span class="skill-logo">NET</span>
+                        <span>ASP.NET Core</span>
+                    </div>
+
+                    <div class="skill-item">
+                        <span class="skill-logo">MVC</span>
+                        <span>MVC</span>
+                    </div>
+
+                    <div class="skill-item">
+                        <span class="skill-logo">BS</span>
+                        <span>Bootstrap</span>
+                    </div>
+
+                    <div class="skill-item">
+                        <span class="skill-logo">JS</span>
+                        <span>jQuery</span>
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- DATABASES -->
+            <div class="skill-category">
+
+                <div class="skill-category-header">
+                    <span class="skill-category-icon">▤</span>
+                    <span class="skill-category-number">03</span>
+                </div>
+
+                <span class="skill-category-label">03 / DATA MANAGEMENT</span>
+                <h3>Databases</h3>
+                <p class="skill-category-description">
+                    Systems I use to store, organize, and manage data.
+                </p>
+
+                <div class="skill-list">
+
+                    <div class="skill-item">
+                        <span class="skill-logo">PG</span>
+                        <span>PostgreSQL</span>
+                    </div>
+
+                    <div class="skill-item">
+                        <span class="skill-logo">SB</span>
+                        <span>Supabase</span>
+                    </div>
+
+                    <div class="skill-item">
+                        <span class="skill-logo">SQL</span>
+                        <span>SQL</span>
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- DEVELOPMENT TOOLS -->
+            <div class="skill-category">
+
+                <div class="skill-category-header">
+                    <span class="skill-category-icon">⌘</span>
+                    <span class="skill-category-number">04</span>
+                </div>
+
+                <span class="skill-category-label">04 / WORKFLOW</span>
+                <h3>Development Tools</h3>
+                <p class="skill-category-description">
+                    Tools I use throughout my development workflow.
+                </p>
+
+                <div class="skill-list">
+
+                    <div class="skill-item">
+                        <span class="skill-logo">VS</span>
+                        <span>Visual Studio</span>
+                    </div>
+
+                    <div class="skill-item">
+                        <span class="skill-logo">GH</span>
+                        <span>GitHub</span>
+                    </div>
+
+                    <div class="skill-item">
+                        <span class="skill-logo">VS</span>
+                        <span>VS Code</span>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- BOTTOM DECORATION -->
+        <div class="skills-bottom-line">
+            <span>TOOLS ARE ONLY AS GOOD AS THE IDEAS BEHIND THEM.</span>
+            <span>03 — 05</span>
+        </div>
+
+    </div>
+
+</section>
+
+
+<section class="education-section" id="education">
+    <div class="education-container">
+        <div class="section-heading">
+            <span class="section-label">04 / MY BACKGROUND</span>
+            <h2>MY <span>EDUCATION.</span></h2>
+            <p>Where my learning journey and technical foundation began.</p>
+        </div>
+
+        <div class="education-timeline">
+
+            <div class="education-item">
+                <div class="education-marker">
+                    <span>01</span>
+                </div>
+
+                <div class="education-card">
+                    <div class="education-card-top">
+                        <span class="education-level">HIGHER EDUCATION</span>
+                        <span class="education-period">[START YEAR] — PRESENT</span>
+                    </div>
+
+                    <h3>[YOUR DEGREE / PROGRAM]</h3>
+                    <h4>[YOUR UNIVERSITY / COLLEGE]</h4>
+
+                    <p>
+                        [WRITE A SHORT DESCRIPTION OF YOUR CURRENT STUDIES.
+                        YOU CAN MENTION YOUR FIELD, WHAT YOU ARE LEARNING,
+                        OR YOUR INTEREST IN TECHNOLOGY.]
+                    </p>
+
+                    <div class="education-tags">
+                        <span>[AREA OF STUDY]</span>
+                        <span>[RELEVANT SUBJECT]</span>
+                        <span>[ANOTHER SUBJECT]</span>
+                    </div>
+
+                    <span class="education-card-index">01</span>
+                </div>
+            </div>
+
+            <div class="education-item">
+                <div class="education-marker">
+                    <span>02</span>
+                </div>
+
+                <div class="education-card">
+                    <div class="education-card-top">
+                        <span class="education-level">SECONDARY EDUCATION</span>
+                        <span class="education-period">[START YEAR] — [END YEAR]</span>
+                    </div>
+
+                    <h3>[YOUR SENIOR HIGH SCHOOL STRAND]</h3>
+                    <h4>[YOUR SENIOR HIGH SCHOOL]</h4>
+
+                    <p>
+                        [WRITE A SHORT DESCRIPTION OF YOUR SENIOR HIGH SCHOOL
+                        EXPERIENCE, INCLUDING RELEVANT SUBJECTS OR ACTIVITIES.]
+                    </p>
+
+                    <div class="education-tags">
+                        <span>[STRAND OR SPECIALIZATION]</span>
+                        <span>[RELEVANT SUBJECT]</span>
+                    </div>
+
+                    <span class="education-card-index">02</span>
+                </div>
+            </div>
+
+            <div class="education-item">
+                <div class="education-marker">
+                    <span>03</span>
+                </div>
+
+                <div class="education-card">
+                    <div class="education-card-top">
+                        <span class="education-level">BASIC EDUCATION</span>
+                        <span class="education-period">[START YEAR] — [END YEAR]</span>
+                    </div>
+
+                    <h3>JUNIOR HIGH SCHOOL</h3>
+                    <h4>[YOUR SCHOOL NAME]</h4>
+
+                    <p>
+                        [OPTIONAL: ADD A SHORT DESCRIPTION OR REMOVE THIS
+                        PARAGRAPH IF YOU WANT TO KEEP IT SIMPLE.]
+                    </p>
+
+                    <span class="education-card-index">03</span>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="education-bottom-line">
+            <span>EVERY STEP BUILDS THE FOUNDATION.</span>
+            <span>04 — 05</span>
+        </div>
+    </div>
+</section>
+
+
+<section class="contact-section" id="contact">
+    <div class="contact-container">
+
+        <div class="section-heading">
+            <span class="section-label">05 / LET'S CONNECT</span>
+            <h2>HAVE SOMETHING IN <span>MIND?</span></h2>
+            <p>I'm always open to conversations, ideas, and opportunities to learn.</p>
+        </div>
+
+        <div class="contact-content">
+            <div class="contact-main">
+                <span class="contact-eyebrow">GET IN TOUCH</span>
+
+                <h3>Let's create something <span>meaningful.</span></h3>
+
+                <p>
+                    [WRITE A SHORT MESSAGE INVITING VISITORS TO CONTACT YOU.
+                    YOU CAN MENTION COLLABORATIONS, PROJECT IDEAS, OR
+                    PROFESSIONAL OPPORTUNITIES.]
+                </p>
+
+                <a class="contact-email-button"
+                   href="mailto:YOUR-EMAIL@example.com">
+                    <span class="contact-email-icon">✉</span>
+                    <span>
+                        <small>SEND ME AN EMAIL</small>
+                        <strong>YOUR-EMAIL@example.com</strong>
+                    </span>
+                    <span class="contact-email-arrow">↗</span>
+                </a>
+            </div>
+
+            <div class="contact-socials">
+                <span class="contact-social-heading">FIND ME ELSEWHERE</span>
+
+                <a href="https://github.com/YOUR-USERNAME"
+                   target="_blank"
+                   rel="noopener noreferrer"
+                   class="contact-social-link">
+                    <span class="contact-social-icon">GH</span>
+                    <span>
+                        <strong>GitHub</strong>
+                        <small>Explore my projects and code</small>
+                    </span>
+                    <span class="contact-social-arrow">↗</span>
+                </a>
+
+                <a href="https://linkedin.com/in/YOUR-USERNAME"
+                   target="_blank"
+                   rel="noopener noreferrer"
+                   class="contact-social-link">
+                    <span class="contact-social-icon">IN</span>
+                    <span>
+                        <strong>LinkedIn</strong>
+                        <small>Connect with me professionally</small>
+                    </span>
+                    <span class="contact-social-arrow">↗</span>
+                </a>
+
+                <a href="mailto:YOUR-EMAIL@example.com"
+                   class="contact-social-link">
+                    <span class="contact-social-icon">✉</span>
+                    <span>
+                        <strong>Email</strong>
+                        <small>Send me a direct message</small>
+                    </span>
+                    <span class="contact-social-arrow">↗</span>
+                </a>
+            </div>
+        </div>
+
+        <div class="contact-bottom">
+            <div>
+                <span class="contact-status-dot"></span>
+                OPEN TO LEARNING AND NEW OPPORTUNITIES
+            </div>
+            <span>THANK YOU FOR VISITING.</span>
+        </div>
+
+    </div>
+</section>
+
+
+<!-- FLOATING SECTION NAVIGATION -->
+<div class="floating-navigation" id="floating-navigation">
+
+    <div class="floating-nav-menu" id="floating-nav-menu" aria-hidden="true">
+
+        <a href="#top" class="floating-nav-link">
+            <span class="floating-nav-number">01</span>
+            <span>Home</span>
+        </a>
+
+        <a href="#about" class="floating-nav-link">
+            <span class="floating-nav-number">02</span>
+            <span>About Me</span>
+        </a>
+
+        <a href="#skills" class="floating-nav-link">
+            <span class="floating-nav-number">03</span>
+            <span>Technical Skills</span>
+        </a>
+
+        <a href="#education" class="floating-nav-link">
+            <span class="floating-nav-number">04</span>
+            <span>Education</span>
+        </a>
+
+        <a href="#contact" class="floating-nav-link">
+            <span class="floating-nav-number">05</span>
+            <span>Contact Me</span>
+        </a>
+
+        <button type="button" class="floating-nav-top" id="floating-nav-top">
+            <span>↑</span>
+            Back to Top
+        </button>
+
+    </div>
+
+    <button type="button"
+            class="floating-nav-toggle"
+            id="floating-nav-toggle"
+            aria-label="Open section navigation"
+            aria-expanded="false"
+            aria-controls="floating-nav-menu">
+
+        <span class="floating-nav-toggle-icon">
+            <span></span>
+            <span></span>
+            <span></span>
+        </span>
+
+        <span class="floating-nav-toggle-label">NAVIGATE</span>
+    </button>
+
 </div>
+
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/home.css" asp-append-version="true" />
+}

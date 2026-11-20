@@ -1,31 +1,135 @@
+
+/* ========================================
+   GLOBAL DESIGN SYSTEM
+   RED + BLACK CYBERPUNK THEME
+======================================== */
+
+:root {
+    /* COLORS */
+    --background-main: #0b0b0f;
+    --background-secondary: #111116;
+    --background-card: #17171e;
+    --accent-red: #e32636;
+    --accent-red-hover: #ff3548;
+    --accent-red-glow: rgba(227, 38, 54, 0.35);
+    --text-primary: #f5f2f2;
+    --text-secondary: #b0adb3;
+    --text-muted: #77747d;
+    --border-color: rgba(255, 255, 255, 0.1);
+    --border-red: rgba(227, 38, 54, 0.35);
+    /* TYPOGRAPHY */
+    --font-heading: "Rajdhani", sans-serif;
+    --font-body: "Inter", sans-serif;
+    /* EFFECTS */
+    --shadow-red: 0 0 25px rgba(227, 38, 54, 0.18);
+    --transition-smooth: all 0.3s ease;
+}
+
+/* GLOBAL RESET */
+
 html {
-  font-size: 14px;
-}
-
-@media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
-}
-
-.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
-}
-
-html {
-  position: relative;
-  min-height: 100%;
+    min-height: 100%;
+    scroll-behavior: smooth;
+    scroll-padding-top: 110px;
 }
 
 body {
-  margin-bottom: 60px;
+    min-height: 100vh;
+    margin: 0;
+    background-color: var(--background-main);
+    background-image: radial-gradient( circle at 15% 15%, rgba(227, 38, 54, 0.07), transparent 30% ), radial-gradient( circle at 85% 55%, rgba(227, 38, 54, 0.035), transparent 35% );
+    color: var(--text-primary);
+    font-family: var(--font-body);
+    font-size: 15px;
+    line-height: 1.7;
+    overflow-x: hidden;
 }
 
-.form-floating > .form-control-plaintext::placeholder, .form-floating > .form-control::placeholder {
-  color: var(--bs-secondary-color);
-  text-align: end;
+/* TYPOGRAPHY */
+
+h1, h2, h3, h4, h5, h6 {
+    color: var(--text-primary);
+    font-family: var(--font-heading);
+    font-weight: 700;
+    line-height: 1.15;
 }
 
-.form-floating > .form-control-plaintext:focus::placeholder, .form-floating > .form-control:focus::placeholder {
-  text-align: start;
+h1 {
+    font-weight: 800;
+}
+
+p {
+    color: var(--text-secondary);
+}
+
+a {
+    color: var(--accent-red);
+    transition: var(--transition-smooth);
+}
+
+    a:hover {
+        color: var(--accent-red-hover);
+    }
+
+/* TEXT SELECTION */
+
+::selection {
+    color: white;
+    background: var(--accent-red);
+}
+
+/* SCROLLBAR */
+
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--background-main);
+}
+
+::-webkit-scrollbar-thumb {
+    background: #393039;
+    border-radius: 10px;
+}
+
+    ::-webkit-scrollbar-thumb:hover {
+        background: var(--accent-red);
+    }
+
+/* FOCUS ACCESSIBILITY */
+
+:focus-visible {
+    outline: 2px solid var(--accent-red);
+    outline-offset: 3px;
+}
+
+/* RED TEXT UTILITY */
+
+.text-accent {
+    color: var(--accent-red) !important;
+}
+
+/* RESPONSIVE */
+
+@media (max-width: 768px) {
+    body {
+        font-size: 14px;
+    }
+}
+
+/* REDUCED MOTION ACCESSIBILITY */
+
+@media (prefers-reduced-motion: reduce) {
+    html {
+        scroll-behavior: auto;
+    }
+
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
 }
