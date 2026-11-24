@@ -5,120 +5,117 @@
     ViewData["Title"] = "Add Project";
 }
 
-<h1 class="mb-2">Add Project</h1>
-<p class="text-muted mb-4">
-    Add a new project to your portfolio.
-</p>
+@section Styles {
+    <link rel="stylesheet"
+          href="~/css/project-forms.css"
+          asp-append-version="true" />
+}
 
-<div class="row">
-    <div class="col-md-7">
-        <form asp-controller="Projects"
-              asp-action="Create"
-              method="post">
+<div class="editor-page">
+    <section class="editor-panel">
 
-            <div asp-validation-summary="ModelOnly"
-                 class="text-danger mb-3">
+        <header class="editor-heading">
+            <div class="editor-heading-content">
+                <span class="editor-eyebrow">PORTFOLIO / PROJECT EDITOR</span>
+                <h1>Create something<br /><span>worth showing.</span></h1>
+                <p>Add a project to your portfolio. Fill in the details below to get started.</p>
             </div>
 
-            <div class="mb-3">
-                <label asp-for="CourseId" class="form-label">
-                    Course
-                </label>
+            <div class="editor-heading-side">
+                <span class="editor-panel-mark">
+                    <span class="editor-mark-dot"></span>
+                    NEW ENTRY
+                </span>
+                <span class="editor-index">PROJECT <strong> / 01</strong></span>
+                <span class="editor-index-line"></span>
+            </div>
+        </header>
 
+        <form asp-controller="Projects"
+              asp-action="Create"
+              method="post"
+              class="editor-form">
+
+            <div asp-validation-summary="ModelOnly"
+                 class="editor-validation-summary">
+            </div>
+
+            <div class="editor-section-label">
+                <span>01</span>
+                PROJECT DETAILS
+            </div>
+
+            <div class="editor-field">
+                <label asp-for="CourseId">Course</label>
                 <select asp-for="CourseId"
                         class="form-select"
                         asp-items="@(new SelectList(ViewBag.Courses, "CourseId", "CourseCode"))">
                     <option value="">Select a course</option>
                 </select>
-
-                <span asp-validation-for="CourseId"
-                      class="text-danger">
-                </span>
+                <span asp-validation-for="CourseId" class="editor-validation"></span>
             </div>
 
-            <div class="mb-3">
-                <label asp-for="Title" class="form-label">
-                    Project Title
-                </label>
-
+            <div class="editor-field">
+                <label asp-for="Title">Project Title</label>
                 <input asp-for="Title"
                        class="form-control"
-                       placeholder="Enter project title" />
-
-                <span asp-validation-for="Title"
-                      class="text-danger">
-                </span>
+                       placeholder="e.g. Student Management System" />
+                <span asp-validation-for="Title" class="editor-validation"></span>
             </div>
 
-            <div class="mb-3">
-                <label asp-for="Description" class="form-label">
-                    Description
-                </label>
-
+            <div class="editor-field full-width">
+                <label asp-for="Description">Description <span> / OPTIONAL</span></label>
                 <textarea asp-for="Description"
                           class="form-control"
                           rows="4"
-                          placeholder="Describe your project">
-                </textarea>
-
-                <span asp-validation-for="Description"
-                      class="text-danger">
-                </span>
+                          placeholder="What does the project do? What did you build?"></textarea>
+                <span asp-validation-for="Description" class="editor-validation"></span>
             </div>
 
-            <div class="mb-3">
-                <label asp-for="GithubUrl" class="form-label">
-                    GitHub URL
-                </label>
+            <div class="editor-section-label editor-links-label">
+                <span>02</span>
+                PROJECT LINKS
+            </div>
 
+            <div class="editor-field">
+                <label asp-for="GithubUrl">GitHub Repository</label>
                 <input asp-for="GithubUrl"
                        class="form-control"
                        placeholder="https://github.com/username/project" />
-
-                <span asp-validation-for="GithubUrl"
-                      class="text-danger">
-                </span>
+                <span asp-validation-for="GithubUrl" class="editor-validation"></span>
             </div>
 
-            <div class="mb-3">
-                <label asp-for="VideoUrl" class="form-label">
-                    Video URL
-                </label>
-
+            <div class="editor-field">
+                <label asp-for="VideoUrl">Demo Video <span> / OPTIONAL</span></label>
                 <input asp-for="VideoUrl"
                        class="form-control"
-                       placeholder="Enter project video URL (optional)" />
-
-                <span asp-validation-for="VideoUrl"
-                      class="text-danger">
-                </span>
+                       placeholder="Paste a video URL" />
+                <span asp-validation-for="VideoUrl" class="editor-validation"></span>
             </div>
 
-            <div class="mb-4">
-                <label asp-for="ProjectDate" class="form-label">
-                    Project Date
-                </label>
-
+            <div class="editor-field date-field">
+                <label asp-for="ProjectDate">Project Date</label>
                 <input asp-for="ProjectDate"
                        type="date"
                        class="form-control" />
-
-                <span asp-validation-for="ProjectDate"
-                      class="text-danger">
-                </span>
+                <span asp-validation-for="ProjectDate" class="editor-validation"></span>
             </div>
 
-            <button type="submit" class="btn btn-primary">
-                Save Project
-            </button>
+            <div class="editor-form-actions">
+                <a asp-controller="Projects"
+                   asp-action="Index"
+                   class="editor-cancel-button">
+                    Cancel
+                </a>
 
-            <a asp-controller="Projects"
-               asp-action="Index"
-               class="btn btn-outline-secondary">
-                Cancel
-            </a>
+                <button type="submit" class="editor-save-button">
+                    Save Project
+                    <span aria-hidden="true">↗</span>
+                </button>
+            </div>
+
         </form>
-    </div>
+    </section>
 </div>
 
 @section Scripts {

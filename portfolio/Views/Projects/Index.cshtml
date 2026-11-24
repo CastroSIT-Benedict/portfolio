@@ -4,308 +4,689 @@
     ViewData["Title"] = "Projects";
 }
 
-<div class="d-flex justify-content-between align-items-center mb-4">
-    <div>
-        <h1 class="mb-2">My Projects</h1>
-        <p class="text-muted mb-0">
-            A collection of projects from my courses.
-        </p>
-    </div>
+@section Styles {
+    <link rel="stylesheet"
+          href="~/css/projects.css"
+          asp-append-version="true" />
+}
 
-    
+<div class="projects-page">
+
+    <!-- PAGE HEADER -->
+    <section class="projects-hero">
+        <div class="projects-hero-content">
+
+            <span class="projects-eyebrow">
+                PORTFOLIO / PROJECT ARCHIVE
+            </span>
+
+            <h1>
+                My <span>Projects</span>
+            </h1>
+
+            <p>
+                A collection of projects I've built throughout my academic journey.
+                Each one represents something I've learned, explored, and created.
+            </p>
+
+            <div class="projects-hero-line"></div>
+
+        </div>
+
+        <div class="projects-hero-decoration">
+            <span class="decoration-square"></span>
+            <span class="decoration-square"></span>
+            <span class="decoration-square"></span>
+        </div>
+    </section>
+
+    <!-- NOTIFICATIONS -->
     @if (TempData["Success"] != null)
     {
-        <div class="alert alert-success fade show auto-dismiss">
+        <div class="project-alert project-alert-success auto-dismiss">
+            <span class="alert-indicator"></span>
             @TempData["Success"]
         </div>
     }
 
     @if (TempData["Error"] != null)
     {
-        <div class="alert alert-danger">
+        <div class="project-alert project-alert-error">
+            <span class="alert-indicator"></span>
             @TempData["Error"]
         </div>
     }
 
-
+    <!-- EDITOR CONTROLS -->
     @if (User.IsInRole("Editor"))
     {
-        <div class="d-flex gap-2">
-            <a asp-controller="Courses"
-               asp-action="Index"
-               class="btn btn-outline-primary">
-                Manage Courses
-            </a>
+        <div class="project-admin-toolbar">
 
-            <a asp-controller="Projects"
-               asp-action="Create"
-               class="btn btn-primary">
-                Add Project
-            </a>
+            <div>
+                <span class="admin-label">ADMIN CONTROLS</span>
+                <p>Manage your portfolio collection.</p>
+            </div>
+
+            <div class="admin-actions">
+
+                <a asp-controller="Courses"
+                   asp-action="Index"
+                   class="project-admin-button secondary">
+                    Manage Courses
+                </a>
+
+                <a asp-controller="Projects"
+                   asp-action="Create"
+                   class="project-admin-button primary">
+                    <span>+</span> Add Project
+                </a>
+
+            </div>
         </div>
     }
-</div>
 
-@if (Model.Count == 0)
-{
-    <p>No projects found.</p>
-}
-else
-{
-    @foreach (var course in Model.GroupBy(p => new { p.CourseCode, p.CourseName }))
+    <!-- PROJECT CONTENT -->
+    @if (Model.Count == 0)
     {
-        <section class="mb-4">
-            <h2>@course.Key.CourseCode</h2>
-            <p class="text-muted">@course.Key.CourseName</p>
+        <div class="projects-empty">
+            <span class="empty-symbol">[ 00 ]</span>
+            <h2>No Projects Yet</h2>
+            <p>There are currently no projects in the collection.</p>
+        </div>
+    }
+    else
+    {
+        <div class="projects-collection">
 
-            <div class="row">
-                @foreach (var project in course)
-                {
-                    <div class="col-md-6 mb-3">
-                        <div class="card h-100">
-                            <div class="card-body">
+            @foreach (var course in Model.GroupBy(p => new { p.CourseCode, p.CourseName }))
+            {
+                <section class="course-section">
 
-                                <h5 class="card-title">
-                                    @project.Title
-                                </h5>
+                    <!-- COURSE HEADER -->
+                    <div class="course-header">
 
-                                <p class="card-text">
-                                    @(project.Description ?? "No description available.")
-                                </p>
+                        <div class="course-heading">
+                            <span class="course-label">COURSE / CATEGORY</span>
 
-                                <p class="text-muted">
-                                    <small>
-                                        Date: @(project.ProjectDate?.ToString("MMMM dd, yyyy") ?? "No date")
-                                    </small>
-                                </p>
+                            <h2>@course.Key.CourseCode</h2>
 
-                                @if (!string.IsNullOrEmpty(project.GithubUrl))
-                                {
-                                    <a href="@project.GithubUrl"
-                                       target="_blank"
-                                       rel="noopener noreferrer">
-                                        View GitHub
-                                    </a>
-                                }
+                            <p>@course.Key.CourseName</p>
+                        </div>
 
-                                @if (!string.IsNullOrEmpty(project.VideoUrl))
-                                {
-                                    <a href="@project.VideoUrl"
-                                       target="_blank"
-                                       rel="noopener noreferrer"
-                                       class="ms-2">
-                                        View Video
-                                    </a>
-                                }
+                        <div class="course-count">
+                            <span>@course.Count().ToString("00")</span>
+                            <small>PROJECT@(course.Count() == 1 ? "" : "S")</small>
+                        </div>
 
-                                @* Uploaded project images *@
+                    </div>
 
-                                @if (project.Images.Count > 0)
-                                {
-                                    <hr />
+                    <!-- PROJECT GRID -->
+                    <div class="projects-grid">
 
-                                    <button class="btn btn-outline-secondary btn-sm"
-                                            type="button"
-                                            data-bs-toggle="collapse"
-                                            data-bs-target="#images-@project.ProjectId"
-                                            aria-expanded="false"
-                                            aria-controls="images-@project.ProjectId">
+                        @foreach (var project in course)
+                        {
+                            <!-- PROJECT PREVIEW CARD -->
+                            <article class="project-card">
 
-                                        View Images (@project.Images.Count)
+                                <div class="project-card-top">
+                                    <span class="project-number">
+                                        PROJECT / @project.ProjectId.ToString("00")
+                                    </span>
+
+                                    <span class="project-status-dot"></span>
+                                </div>
+
+                                <div class="project-card-content">
+
+                                    <h3>@project.Title</h3>
+
+                                    <p class="project-description">
+                                        @(project.Description ?? "No description available.")
+                                    </p>
+
+                                    <div class="project-date">
+                                        <span class="date-icon">◷</span>
+                                        @(project.ProjectDate?.ToString("MMMM dd, yyyy") ?? "No date")
+                                    </div>
+
+                                    <button type="button"
+                                            class="project-expand-button"
+                                            data-project-open="project-overlay-@project.ProjectId">
+
+                                        <span>View Full Project</span>
+                                        <span class="expand-icon">↗</span>
+
                                     </button>
 
-                                    <div class="collapse mt-3"
-                                         id="images-@project.ProjectId">
+                                </div>
 
-                                        <div class="row g-3">
-                                            @foreach (var image in project.Images)
+                                <div class="project-card-bottom">
+                                    <span>PORTFOLIO ENTRY</span>
+                                    <span>///</span>
+                                </div>
+
+                            </article>
+
+                            <!-- FULL PROJECT OVERLAY -->
+                            <div class="project-overlay"
+                                 id="project-overlay-@project.ProjectId"
+                                 aria-hidden="true">
+
+                                <div class="project-overlay-panel"
+                                     role="dialog"
+                                     aria-modal="true"
+                                     aria-labelledby="project-title-@project.ProjectId">
+
+                                    <!-- OVERLAY HEADER -->
+                                    <div class="project-overlay-header">
+
+                                        <span class="project-overlay-label">
+                                            PROJECT / @project.ProjectId.ToString("00")
+                                        </span>
+
+                                        <button type="button"
+                                                class="project-overlay-close"
+                                                aria-label="Close project">
+                                            ×
+                                        </button>
+
+                                    </div>
+
+                                    <!-- PROJECT INFORMATION -->
+                                    <div class="project-overlay-body">
+
+                                        <div class="project-overlay-intro">
+
+                                            <span class="details-label">PROJECT OVERVIEW</span>
+
+                                            <h2 id="project-title-@project.ProjectId">
+                                                @project.Title
+                                            </h2>
+
+                                            <p class="project-overlay-description">
+                                                @(project.Description ?? "No description available.")
+                                            </p>
+
+                                            <div class="project-overlay-date">
+                                                <span>PROJECT DATE</span>
+
+                                                <strong>
+                                                    @(project.ProjectDate?.ToString("MMMM dd, yyyy") ?? "No date")
+                                                </strong>
+                                            </div>
+
+                                            <!-- PROJECT LINKS -->
+                                            @if (!string.IsNullOrEmpty(project.GithubUrl)
+                                                || !string.IsNullOrEmpty(project.VideoUrl))
                                             {
-                                                <div class="col-6 col-md-4">
-                                                    <img src="@image.ImageUrl"
-                                                         alt="@(image.Caption ?? project.Title)"
-                                                         class="img-fluid rounded project-thumbnail"
-                                                         loading="lazy"
-                                                         data-full-image="@image.ImageUrl"
-                                                         data-image-caption="@image.Caption" />
+                                                <div class="project-overlay-links">
 
-                                                    @if (!string.IsNullOrWhiteSpace(image.Caption))
+                                                    @if (!string.IsNullOrEmpty(project.GithubUrl))
                                                     {
-                                                        <p class="text-muted small mt-1 mb-0">
-                                                            @image.Caption
-                                                        </p>
+                                                        <a href="@project.GithubUrl"
+                                                           target="_blank"
+                                                           rel="noopener noreferrer">
+                                                            View GitHub Repository ↗
+                                                        </a>
                                                     }
 
-                                                    @if (User.IsInRole("Editor"))
+                                                    @if (!string.IsNullOrEmpty(project.VideoUrl))
                                                     {
-                                                        <form asp-controller="Projects"
-                                                              asp-action="DeleteImage"
-                                                              method="post"
-                                                              onsubmit="return confirm('Are you sure you want to delete this image?');"
-                                                              class="mt-2">
-
-                                                            <input type="hidden"
-                                                                   name="imageId"
-                                                                   value="@image.ImageId" />
-
-                                                            <button type="submit"
-                                                                    class="btn btn-sm btn-outline-danger">
-                                                                Delete Image
-                                                            </button>
-                                                        </form>
+                                                        <a href="@project.VideoUrl"
+                                                           target="_blank"
+                                                           rel="noopener noreferrer">
+                                                            Watch Video Demo ↗
+                                                        </a>
                                                     }
+
                                                 </div>
                                             }
+
                                         </div>
+
+                                        <!-- PROJECT IMAGES -->
+                                        @if (project.Images.Count > 0)
+                                        {
+                                            <section class="project-overlay-gallery">
+
+                                                <div class="overlay-section-heading">
+                                                    <span class="details-label">PROJECT GALLERY</span>
+                                                    <span>@project.Images.Count IMAGE(S)</span>
+                                                </div>
+
+                                                <div class="overlay-image-grid">
+
+                                                    @foreach (var image in project.Images)
+                                                    {
+                                                        <div class="overlay-image-item">
+
+                                                            <img src="@image.ImageUrl"
+                                                                 alt="@(image.Caption ?? project.Title)"
+                                                                 class="project-thumbnail"
+                                                                 loading="lazy"
+                                                                 data-full-image="@image.ImageUrl"
+                                                                 data-image-caption="@image.Caption" />
+
+                                                            @if (!string.IsNullOrWhiteSpace(image.Caption))
+                                                            {
+                                                                <p>@image.Caption</p>
+                                                            }
+
+                                                            @if (User.IsInRole("Editor"))
+                                                            {
+                                                                <form asp-controller="Projects"
+                                                                      asp-action="DeleteImage"
+                                                                      method="post"
+                                                                      onsubmit="return confirm('Are you sure you want to delete this image?');">
+
+                                                                    @Html.AntiForgeryToken()
+
+                                                                    <input type="hidden"
+                                                                           name="imageId"
+                                                                           value="@image.ImageId" />
+
+                                                                    <button type="submit"
+                                                                            class="delete-image-button">
+                                                                        Delete Image
+                                                                    </button>
+
+                                                                </form>
+                                                            }
+
+                                                        </div>
+                                                    }
+
+                                                </div>
+
+                                            </section>
+                                        }
+
+                                        <!-- EDITOR CONTROLS -->
+                                        @if (User.IsInRole("Editor"))
+                                        {
+                                            <div class="project-overlay-admin">
+
+                                                <span class="details-label">PROJECT MANAGEMENT</span>
+
+                                                <div class="project-editor-actions">
+
+                                                    <a asp-controller="Projects"
+                                                       asp-action="Edit"
+                                                       asp-route-id="@project.ProjectId"
+                                                       class="editor-action edit-action">
+                                                        Edit Project
+                                                    </a>
+
+                                                    <a asp-controller="Projects"
+                                                       asp-action="UploadImage"
+                                                       asp-route-projectId="@project.ProjectId"
+                                                       class="editor-action upload-action">
+                                                        Upload Image
+                                                    </a>
+
+                                                    <!-- DELETE PROJECT FORM -->
+                                                    <form asp-controller="Projects"
+                                                          asp-action="Delete"
+                                                          asp-route-id="@project.ProjectId"
+                                                          method="post"
+                                                          class="project-delete-form">
+
+                                                        @Html.AntiForgeryToken()
+
+                                                        <button type="submit"
+                                                                class="editor-action delete-action"
+                                                                data-confirm-delete
+                                                                data-confirm-title="Delete Project?"
+                                                                data-confirm-message="Are you sure you want to delete this project? This action cannot be undone."
+                                                                data-confirm-button="Delete Project">
+                                                            Delete Project
+                                                        </button>
+
+                                                    </form>
+
+                                                </div>
+
+                                            </div>
+                                        }
+
                                     </div>
-                                }
 
-                                @if (User.IsInRole("Editor"))
-                                {
-                                    <hr />
-
-                                    <div class="d-flex gap-2 flex-wrap">
-                                        <a asp-controller="Projects"
-                                           asp-action="Edit"
-                                           asp-route-id="@project.ProjectId"
-                                           class="btn btn-sm btn-outline-primary">
-                                            Edit
-                                        </a>
-
-                                        <a asp-controller="Projects"
-                                           asp-action="UploadImage"
-                                           asp-route-projectId="@project.ProjectId"
-                                           class="btn btn-sm btn-outline-success">
-                                            Upload Image
-                                        </a>
-
-                                        <form asp-controller="Projects"
-                                              asp-action="Delete"
-                                              asp-route-id="@project.ProjectId"
-                                              method="post"
-                                              onsubmit="return confirm('Are you sure you want to delete this project?');">
-
-                                            <button type="submit"
-                                                    class="btn btn-sm btn-outline-danger">
-                                                Delete
-                                            </button>
-                                        </form>
+                                    <!-- OVERLAY FOOTER -->
+                                    <div class="project-overlay-footer">
+                                        <span>PORTFOLIO / PROJECT ARCHIVE</span>
+                                        <span>PROJECT / @project.ProjectId.ToString("00")</span>
                                     </div>
-                                }
 
+                                </div>
                             </div>
-                        </div>
+                        }
+
                     </div>
-                }
-            </div>
-        </section>
+
+                </section>
+            }
+
+        </div>
     }
-}
 
-@* Enlarged image overlay *@
+</div>
 
+<!-- IMAGE LIGHTBOX -->
 <div id="imageLightbox" class="image-lightbox">
+
+    <button type="button"
+            id="lightboxClose"
+            class="lightbox-close"
+            aria-label="Close image">
+        ×
+    </button>
+
     <div class="lightbox-content">
-        <img id="lightboxImage" src="" alt="Expanded project image" />
+
+        <img id="lightboxImage"
+             src=""
+             alt="Expanded project image" />
+
         <p id="lightboxCaption"></p>
+
     </div>
 </div>
 
-<style>
-    .project-thumbnail {
-        width: 100%;
-        height: 150px;
-        object-fit: cover;
-        cursor: pointer;
-        transition: transform 0.2s ease;
-    }
+<!-- DELETE CONFIRMATION MODAL -->
+<div id="deleteConfirmModal"
+     class="delete-confirm-modal"
+     aria-hidden="true">
 
-        .project-thumbnail:hover {
-            transform: scale(1.03);
-        }
+    <div class="delete-confirm-panel"
+         role="dialog"
+         aria-modal="true"
+         aria-labelledby="deleteConfirmTitle">
 
-    .image-lightbox {
-        display: none;
-        position: fixed;
-        z-index: 2000;
-        inset: 0;
-        background: rgba(0, 0, 0, 0.85);
-        justify-content: center;
-        align-items: center;
-        padding: 20px;
-        cursor: pointer;
-    }
+        <div class="delete-confirm-header">
+            <span>PORTFOLIO / CONFIRMATION</span>
+            <span class="delete-warning-icon">!</span>
+        </div>
 
-        .image-lightbox.active {
-            display: flex;
-        }
+        <div class="delete-confirm-body">
 
-    .lightbox-content {
-        max-width: 90%;
-        max-height: 90%;
-        text-align: center;
-        cursor: default;
-    }
+            <span class="delete-confirm-eyebrow">
+                WARNING / DESTRUCTIVE ACTION
+            </span>
 
-        .lightbox-content img {
-            max-width: 100%;
-            max-height: 80vh;
-            object-fit: contain;
-            border-radius: 8px;
-        }
+            <h2 id="deleteConfirmTitle">
+                Delete <span>Project?</span>
+            </h2>
 
-        .lightbox-content p {
-            color: white;
-            margin-top: 12px;
-        }
-</style>
+            <p id="deleteConfirmMessage">
+                Are you sure you want to delete this project?
+                This action cannot be undone.
+            </p>
 
-<script>
-    const lightbox = document.getElementById("imageLightbox");
-    const lightboxImage = document.getElementById("lightboxImage");
-    const lightboxCaption = document.getElementById("lightboxCaption");
+        </div>
 
-    // Open the enlarged image.
-    document.querySelectorAll(".project-thumbnail").forEach(image => {
-        image.addEventListener("click", function () {
-            lightboxImage.src = this.dataset.fullImage;
-            lightboxCaption.textContent = this.dataset.imageCaption || "";
+        <div class="delete-confirm-actions">
 
-            lightbox.classList.add("active");
-            document.body.style.overflow = "hidden";
+            <button type="button"
+                    id="cancelDeleteButton"
+                    class="delete-cancel-button">
+                Cancel
+            </button>
+
+            <button type="button"
+                    id="confirmDeleteButton"
+                    class="delete-confirm-button">
+                Delete Project <span>→</span>
+            </button>
+
+        </div>
+
+        <div class="delete-confirm-footer">
+            PORTFOLIO SYSTEM / DELETE REQUEST
+        </div>
+
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+
+            // ELEMENT REFERENCES
+            const projectOpenButtons = document.querySelectorAll("[data-project-open]");
+            const projectOverlays = document.querySelectorAll(".project-overlay");
+
+            const lightbox = document.getElementById("imageLightbox");
+            const lightboxImage = document.getElementById("lightboxImage");
+            const lightboxCaption = document.getElementById("lightboxCaption");
+            const lightboxClose = document.getElementById("lightboxClose");
+
+            const deleteModal = document.getElementById("deleteConfirmModal");
+            const deleteTitle = document.getElementById("deleteConfirmTitle");
+            const deleteMessage = document.getElementById("deleteConfirmMessage");
+
+            const cancelDeleteButton = document.getElementById("cancelDeleteButton");
+            const confirmDeleteButton = document.getElementById("confirmDeleteButton");
+
+            let activeProjectOverlay = null;
+            let pendingDeleteForm = null;
+
+            // CENTRALIZED SCROLL LOCK
+            function updateScrollLock() {
+
+                const deleteModalOpen =
+                    deleteModal.classList.contains("active");
+
+                const lightboxOpen =
+                    lightbox.classList.contains("active");
+
+                const projectOverlayOpen =
+                    activeProjectOverlay !== null;
+
+                const shouldLock =
+                    deleteModalOpen || lightboxOpen || projectOverlayOpen;
+
+                document.body.style.overflow = shouldLock ? "hidden" : "";
+            }
+
+            // FULL PROJECT OVERLAY
+            function openProject(overlay) {
+
+                if (!overlay) return;
+
+                activeProjectOverlay = overlay;
+
+                overlay.classList.add("active");
+                overlay.setAttribute("aria-hidden", "false");
+
+                document.body.classList.add("project-overlay-open");
+
+                updateScrollLock();
+
+                const closeButton =
+                    overlay.querySelector(".project-overlay-close");
+
+                closeButton?.focus();
+            }
+
+            function closeProject() {
+
+                if (!activeProjectOverlay) return;
+
+                activeProjectOverlay.classList.remove("active");
+                activeProjectOverlay.setAttribute("aria-hidden", "true");
+
+                activeProjectOverlay = null;
+
+                document.body.classList.remove("project-overlay-open");
+
+                updateScrollLock();
+            }
+
+            projectOpenButtons.forEach(button => {
+
+                button.addEventListener("click", function () {
+
+                    const overlayId = this.dataset.projectOpen;
+                    const overlay = document.getElementById(overlayId);
+
+                    openProject(overlay);
+
+                });
+
+            });
+
+            projectOverlays.forEach(overlay => {
+
+                const closeButton =
+                    overlay.querySelector(".project-overlay-close");
+
+                closeButton?.addEventListener("click", closeProject);
+
+                overlay.addEventListener("click", function (event) {
+
+                    if (event.target === overlay) {
+                        closeProject();
+                    }
+
+                });
+
+            });
+
+            // IMAGE LIGHTBOX
+            document.querySelectorAll(".project-thumbnail").forEach(image => {
+
+                image.addEventListener("click", function () {
+
+                    lightboxImage.src = this.dataset.fullImage;
+                    lightboxCaption.textContent =
+                        this.dataset.imageCaption || "";
+
+                    lightbox.classList.add("active");
+
+                    updateScrollLock();
+
+                });
+
+            });
+
+            function closeLightbox() {
+
+                lightbox.classList.remove("active");
+
+                lightboxImage.src = "";
+                lightboxCaption.textContent = "";
+
+                updateScrollLock();
+            }
+
+            lightbox.addEventListener("click", function (event) {
+
+                if (event.target === lightbox) {
+                    closeLightbox();
+                }
+
+            });
+
+            lightboxClose.addEventListener("click", closeLightbox);
+
+            // DELETE CONFIRMATION MODAL
+            document.querySelectorAll("[data-confirm-delete]").forEach(button => {
+
+                button.addEventListener("click", function (event) {
+
+                    event.preventDefault();
+
+                    pendingDeleteForm = this.closest("form");
+
+                    if (!pendingDeleteForm) return;
+
+                    deleteTitle.textContent =
+                        this.dataset.confirmTitle || "Delete Project?";
+
+                    deleteMessage.textContent =
+                        this.dataset.confirmMessage ||
+                        "Are you sure you want to delete this project?";
+
+                    const buttonText =
+                        this.dataset.confirmButton || "Delete";
+
+                    confirmDeleteButton.innerHTML =
+                        `${buttonText} <span>→</span>`;
+
+                    deleteModal.classList.add("active");
+                    deleteModal.setAttribute("aria-hidden", "false");
+
+                    updateScrollLock();
+
+                    cancelDeleteButton.focus();
+
+                });
+
+            });
+
+            function closeDeleteModal() {
+
+                deleteModal.classList.remove("active");
+                deleteModal.setAttribute("aria-hidden", "true");
+
+                pendingDeleteForm = null;
+
+                updateScrollLock();
+            }
+
+            cancelDeleteButton.addEventListener(
+                "click",
+                closeDeleteModal
+            );
+
+            deleteModal.addEventListener("click", function (event) {
+
+                if (event.target === deleteModal) {
+                    closeDeleteModal();
+                }
+
+            });
+
+            confirmDeleteButton.addEventListener("click", function () {
+
+                if (pendingDeleteForm) {
+                    pendingDeleteForm.submit();
+                }
+
+            });
+
+            // ESCAPE KEY
+            document.addEventListener("keydown", function (event) {
+
+                if (event.key !== "Escape") return;
+
+                if (deleteModal.classList.contains("active")) {
+                    closeDeleteModal();
+                }
+                else if (lightbox.classList.contains("active")) {
+                    closeLightbox();
+                }
+                else if (activeProjectOverlay) {
+                    closeProject();
+                }
+
+            });
+
+            // SUCCESS MESSAGE AUTO-DISMISS
+            document.querySelectorAll(".auto-dismiss").forEach(alert => {
+
+                setTimeout(() => {
+
+                    alert.classList.add("alert-hiding");
+
+                    setTimeout(() => {
+                        alert.remove();
+                    }, 500);
+
+                }, 3000);
+
+            });
+
         });
-    });
-
-    // Close when clicking outside the image.
-    lightbox.addEventListener("click", function (event) {
-        if (event.target === lightbox) {
-            closeLightbox();
-        }
-    });
-
-    // Close when pressing Escape.
-    document.addEventListener("keydown", function (event) {
-        if (event.key === "Escape") {
-            closeLightbox();
-        }
-    });
-
-    function closeLightbox() {
-        lightbox.classList.remove("active");
-        lightboxImage.src = "";
-        lightboxCaption.textContent = "";
-        document.body.style.overflow = "";
-    }
-</script>
-
-<script>
-    document.querySelectorAll(".auto-dismiss").forEach(alert => {
-        setTimeout(() => {
-            alert.classList.remove("show");
-
-            setTimeout(() => {
-                alert.remove();
-            }, 500);
-
-        }, 3000);
-    });
-</script>
+    </script>
+}

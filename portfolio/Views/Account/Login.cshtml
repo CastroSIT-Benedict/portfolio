@@ -1,52 +1,117 @@
-﻿@model portfolio.Models.LoginViewModel
+﻿
+@model portfolio.Models.LoginViewModel
 
 @{
     ViewData["Title"] = "Editor Login";
     var returnUrl = ViewData["ReturnUrl"] as string;
 }
 
-<div class="container mt-5" style="max-width: 400px;">
-    <h2 class="mb-2">Editor Login</h2>
-    <p class="text-muted mb-4">
-        Sign in to manage your portfolio.
-    </p>
+@section Styles {
+    <link rel="stylesheet"
+          href="~/css/login.css"
+          asp-append-version="true" />
+}
 
-    <form asp-controller="Account"
-          asp-action="Login"
-          asp-route-returnUrl="@returnUrl"
-          method="post">
+<div class="login-page">
 
-        <div asp-validation-summary="ModelOnly"
-             class="text-danger mb-3"></div>
+    <!-- BACKGROUND DETAILS -->
+    <div class="login-background-grid"></div>
+    <div class="login-background-glow"></div>
 
-        <div class="mb-3">
-            <label asp-for="Username" class="form-label">
-                Username
-            </label>
+    <!-- LOGIN PANEL -->
+    <div class="login-panel">
 
-            <input asp-for="Username"
-                   class="form-control"
-                   autocomplete="username" />
-
-            <span asp-validation-for="Username"
-                  class="text-danger"></span>
+        <div class="login-panel-top">
+            <span class="login-eyebrow">PORTFOLIO / RESTRICTED ACCESS</span>
+            <span class="login-status">
+                <span class="status-dot"></span>
+                SECURE AREA
+            </span>
         </div>
 
-        <div class="mb-3">
-            <label asp-for="Password" class="form-label">
-                Password
-            </label>
-
-            <input asp-for="Password"
-                   class="form-control"
-                   autocomplete="current-password" />
-
-            <span asp-validation-for="Password"
-                  class="text-danger"></span>
+        <!-- ICON -->
+        <div class="login-icon">
+            <span>01</span>
+            <div class="login-icon-line"></div>
         </div>
 
-        <button type="submit" class="btn btn-primary w-100">
-            Login
-        </button>
-    </form>
+        <!-- HEADING -->
+        <div class="login-heading">
+            <span class="login-subtitle">WELCOME BACK</span>
+
+            <h1>Editor <span>Access.</span></h1>
+
+            <p>
+                Sign in to access your portfolio dashboard
+                and manage your projects.
+            </p>
+        </div>
+
+        <!-- LOGIN FORM -->
+        <form asp-controller="Account"
+              asp-action="Login"
+              asp-route-returnUrl="@returnUrl"
+              method="post"
+              class="login-form">
+
+            @Html.AntiForgeryToken()
+
+            <div asp-validation-summary="ModelOnly"
+                 class="login-validation-summary">
+            </div>
+
+            <!-- USERNAME -->
+            <div class="login-field">
+                <label asp-for="Username">USERNAME</label>
+
+                <input asp-for="Username"
+                       class="form-control"
+                       placeholder="Enter your username"
+                       autocomplete="username"
+                       autofocus />
+
+                <span asp-validation-for="Username"
+                      class="login-validation">
+                </span>
+            </div>
+
+            <!-- PASSWORD -->
+            <div class="login-field">
+                <label asp-for="Password">PASSWORD</label>
+
+                <input asp-for="Password"
+                       class="form-control"
+                       placeholder="Enter your password"
+                       autocomplete="current-password" />
+
+                <span asp-validation-for="Password"
+                      class="login-validation">
+                </span>
+            </div>
+
+            <!-- SUBMIT -->
+            <button type="submit" class="login-submit">
+                <span>Access Portfolio</span>
+                <span class="login-submit-arrow">→</span>
+            </button>
+
+        </form>
+
+        <div class="login-panel-footer">
+            <span>AUTHORIZED EDITORS ONLY</span>
+            <span>PORTFOLIO SYSTEM / 01</span>
+        </div>
+
+    </div>
+
+    <!-- PAGE FOOTER -->
+    <div class="login-page-caption">
+        <span>DESIGNED TO CREATE.</span>
+        <span>BUILT TO DEVELOP.</span>
+    </div>
+
 </div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

@@ -5,28 +5,39 @@
     ViewData["Title"] = "Edit Project";
 }
 
-<h1 class="mb-2">Edit Project</h1>
-<p class="text-muted mb-4">
-    Update the details of your project.
-</p>
+@section Styles {
+    <link rel="stylesheet"
+          href="~/css/project-forms.css"
+          asp-append-version="true" />
+}
 
-<div class="row">
-    <div class="col-md-7">
+<div class="editor-page">
+    <section class="editor-panel">
+
+        <header class="editor-heading">
+            <div>
+                <span class="editor-eyebrow">EDITOR / PROJECTS</span>
+                <h1>Edit Project</h1>
+                <p>Update the details of your project.</p>
+            </div>
+
+            <span class="editor-panel-mark">EDIT ENTRY</span>
+        </header>
+
         <form asp-controller="Projects"
               asp-action="Edit"
               asp-route-id="@Model.ProjectId"
-              method="post">
+              method="post"
+              class="editor-form">
 
             <input type="hidden" asp-for="ProjectId" />
 
             <div asp-validation-summary="ModelOnly"
-                 class="text-danger mb-3">
+                 class="editor-validation-summary">
             </div>
 
-            <div class="mb-3">
-                <label asp-for="CourseId" class="form-label">
-                    Course
-                </label>
+            <div class="editor-field">
+                <label asp-for="CourseId">Course</label>
 
                 <select asp-for="CourseId"
                         class="form-select"
@@ -35,89 +46,82 @@
                 </select>
 
                 <span asp-validation-for="CourseId"
-                      class="text-danger">
+                      class="editor-validation">
                 </span>
             </div>
 
-            <div class="mb-3">
-                <label asp-for="Title" class="form-label">
-                    Project Title
-                </label>
+            <div class="editor-field">
+                <label asp-for="Title">Project Title</label>
 
                 <input asp-for="Title"
                        class="form-control" />
 
                 <span asp-validation-for="Title"
-                      class="text-danger">
+                      class="editor-validation">
                 </span>
             </div>
 
-            <div class="mb-3">
-                <label asp-for="Description" class="form-label">
-                    Description
-                </label>
+            <div class="editor-field full-width">
+                <label asp-for="Description">Description</label>
 
                 <textarea asp-for="Description"
                           class="form-control"
-                          rows="4">
+                          rows="3">
                 </textarea>
 
                 <span asp-validation-for="Description"
-                      class="text-danger">
+                      class="editor-validation">
                 </span>
             </div>
 
-            <div class="mb-3">
-                <label asp-for="GithubUrl" class="form-label">
-                    GitHub URL
-                </label>
+            <div class="editor-field">
+                <label asp-for="GithubUrl">GitHub URL</label>
 
                 <input asp-for="GithubUrl"
                        class="form-control" />
 
                 <span asp-validation-for="GithubUrl"
-                      class="text-danger">
+                      class="editor-validation">
                 </span>
             </div>
 
-            <div class="mb-3">
-                <label asp-for="VideoUrl" class="form-label">
-                    Video URL
-                </label>
+            <div class="editor-field">
+                <label asp-for="VideoUrl">Video URL</label>
 
                 <input asp-for="VideoUrl"
                        class="form-control" />
 
                 <span asp-validation-for="VideoUrl"
-                      class="text-danger">
+                      class="editor-validation">
                 </span>
             </div>
 
-            <div class="mb-4">
-                <label asp-for="ProjectDate" class="form-label">
-                    Project Date
-                </label>
+            <div class="editor-field">
+                <label asp-for="ProjectDate">Project Date</label>
 
                 <input asp-for="ProjectDate"
                        type="date"
                        class="form-control" />
 
                 <span asp-validation-for="ProjectDate"
-                      class="text-danger">
+                      class="editor-validation">
                 </span>
             </div>
 
-            <button type="submit" class="btn btn-primary">
-                Save Changes
-            </button>
+            <div class="editor-form-actions">
+                <a asp-controller="Projects"
+                   asp-action="Index"
+                   class="editor-cancel-button">
+                    Cancel
+                </a>
 
-            <a asp-controller="Projects"
-               asp-action="Index"
-               class="btn btn-outline-secondary">
-                Cancel
-            </a>
+                <button type="submit" class="editor-save-button">
+                    Save Changes
+                </button>
+            </div>
+
         </form>
-    </div>
+    </section>
 </div>
 
 @section Scripts {

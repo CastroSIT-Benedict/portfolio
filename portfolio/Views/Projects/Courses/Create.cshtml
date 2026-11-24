@@ -5,60 +5,94 @@
     ViewData["Title"] = "Add Course";
 }
 
-<h1 class="mb-2">Add Course</h1>
-<p class="text-muted mb-4">
-    Enter the course code and its full name.
-</p>
+@section Styles {
+    <link rel="stylesheet"
+          href="~/css/project-forms.css"
+          asp-append-version="true" />
 
-<div class="row">
-    <div class="col-md-6">
-        <form asp-controller="Courses"
-              asp-action="Create"
-              method="post">
+    <link rel="stylesheet"
+          href="~/css/courses.css"
+          asp-append-version="true" />
+}
 
-            <div asp-validation-summary="ModelOnly"
-                 class="text-danger mb-3">
+<div class="editor-page course-editor-page">
+
+    <!-- PAGE HEADING -->
+    <div class="editor-heading">
+        <span class="editor-eyebrow">PORTFOLIO / COURSES</span>
+
+        <h1>Add <span>Course</span></h1>
+
+        <p>Register a course to organize your portfolio projects.</p>
+    </div>
+
+    <!-- COURSE FORM PANEL -->
+    <div class="editor-panel">
+
+        <div class="editor-panel-header">
+            <div>
+                <span class="editor-panel-label">NEW ENTRY</span>
+                <h2>Course Information</h2>
             </div>
 
-            <div class="mb-3">
-                <label asp-for="CourseCode" class="form-label">
-                    Course Code
-                </label>
+            <span class="editor-panel-mark">01</span>
+        </div>
+
+        <form asp-controller="Courses"
+              asp-action="Create"
+              method="post"
+              class="editor-form course-editor-form">
+
+            @Html.AntiForgeryToken()
+
+            <div asp-validation-summary="ModelOnly"
+                 class="editor-validation-summary">
+            </div>
+
+            <!-- COURSE CODE -->
+            <div class="editor-field">
+                <label asp-for="CourseCode">Course Code</label>
 
                 <input asp-for="CourseCode"
                        class="form-control"
                        placeholder="e.g. DBMWEB1" />
 
                 <span asp-validation-for="CourseCode"
-                      class="text-danger">
+                      class="editor-validation">
                 </span>
             </div>
 
-            <div class="mb-3">
-                <label asp-for="CourseName" class="form-label">
-                    Course Name
-                </label>
+            <!-- COURSE NAME -->
+            <div class="editor-field course-name-field">
+                <label asp-for="CourseName">Course Name</label>
 
                 <input asp-for="CourseName"
                        class="form-control"
-                       placeholder="e.g. Database Management and Web Development 1" />
+                       placeholder="Enter the full course name" />
 
                 <span asp-validation-for="CourseName"
-                      class="text-danger">
+                      class="editor-validation">
                 </span>
             </div>
 
-            <button type="submit" class="btn btn-primary">
-                Save Course
-            </button>
+            <!-- FORM ACTIONS -->
+            <div class="editor-form-actions">
 
-            <a asp-controller="Courses"
-               asp-action="Index"
-               class="btn btn-outline-secondary">
-                Cancel
-            </a>
+                <button type="submit" class="editor-save-button">
+                    Save Course <span>→</span>
+                </button>
+
+                <a asp-controller="Courses"
+                   asp-action="Index"
+                   class="editor-cancel-button">
+                    Cancel
+                </a>
+
+            </div>
+
         </form>
     </div>
+
 </div>
 
 @section Scripts {

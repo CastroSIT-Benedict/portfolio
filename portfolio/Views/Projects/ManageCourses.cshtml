@@ -5,90 +5,277 @@
     ViewData["Title"] = "Manage Courses";
 }
 
-<div class="d-flex justify-content-between align-items-center mb-4">
-    <div>
-        <h1>Manage Courses</h1>
-        <p class="text-muted mb-0">
-            Add, edit, or remove the courses associated with your projects.
-        </p>
-    </div>
+@section Styles {
+    <link rel="stylesheet"
+          href="~/css/courses.css"
+          asp-append-version="true" />
+}
 
-    @if (User.IsInRole("Editor"))
+<div class="courses-page">
+
+    <section class="courses-heading">
+        <div>
+            <span class="courses-eyebrow">PORTFOLIO / DATABASE</span>
+            <h1>Manage <span>Courses</span></h1>
+            <p>
+                Organize the courses connected to your portfolio projects.
+            </p>
+        </div>
+
+        @if (User.IsInRole("Editor"))
+        {
+            <a asp-controller="Courses"
+               asp-action="Create"
+               class="courses-add-button">
+                <span>＋</span> Add Course
+            </a>
+        }
+    </section>
+
+    @if (TempData["Error"] != null)
     {
-        <a asp-controller="Courses"
-           asp-action="Create"
-           class="btn btn-primary">
-            Add Course
-        </a>
+        <div class="courses-alert">
+            <span>!</span>
+            @TempData["Error"]
+        </div>
     }
-</div>
 
-@if (TempData["Error"] != null)
-{
-    <div class="alert alert-danger">
-        @TempData["Error"]
-    </div>
-}
+    <section class="courses-content">
+        <div class="courses-section-heading">
+            <div>
+                <span class="courses-section-label">COURSE DIRECTORY</span>
+                <h2>Registered Courses</h2>
+            </div>
 
-@if (Model.Count == 0)
-{
-    <p>No courses found.</p>
-}
-else
-{
-    <div class="table-responsive">
-        <table class="table table-hover align-middle">
-            <thead>
-                <tr>
-                    <th>Course Code</th>
-                    <th>Course Name</th>
-                    @if (User.IsInRole("Editor"))
-                    {
-                        <th class="text-end">Actions</th>
-                    }
-                </tr>
-            </thead>
+            <span class="courses-count">
+                @Model.Count @(Model.Count == 1 ? "COURSE" : "COURSES")
+            </span>
+        </div>
 
-            <tbody>
+        @if (Model.Count == 0)
+        {
+            <div class="courses-empty">
+                <span class="courses-empty-icon">＋</span>
+                <h3>No courses yet</h3>
+                <p>
+                    Courses added to your portfolio will appear here.
+                </p>
+
+                @if (User.IsInRole("Editor"))
+                {
+                    <a asp-controller="Courses"
+                       asp-action="Create"
+                       class="courses-add-button">
+                        Add Your First Course
+                    </a>
+                }
+            </div>
+        }
+        else
+        {
+            <div class="courses-grid">
                 @foreach (var course in Model)
                 {
-                    <tr>
-                        <td>@course.CourseCode</td>
-                        <td>@course.CourseName</td>
+                    <article class="course-card">
+
+                        <div class="course-card-top">
+                            <span class="course-card-label">COURSE ENTRY</span>
+
+                            <span class="course-card-id">
+                                #@course.CourseId.ToString("D2")
+                            </span>
+                        </div>
+
+                        <div class="course-card-main">
+                            <span class="course-code-label">COURSE CODE</span>
+                            <h3>@course.CourseCode</h3>
+                            <p>@course.CourseName</p>
+                        </div>
 
                         @if (User.IsInRole("Editor"))
                         {
-                            <td class="text-end">
+                            <div class="course-card-actions">
+
                                 <a asp-controller="Courses"
                                    asp-action="Edit"
                                    asp-route-id="@course.CourseId"
-                                   class="btn btn-sm btn-outline-secondary">
-                                    Edit
+                                   class="course-edit-button">
+                                    Edit Course <span>↗</span>
                                 </a>
 
                                 <form asp-controller="Courses"
                                       asp-action="Delete"
                                       asp-route-id="@course.CourseId"
-                                      method="post"
-                                      class="d-inline"
-                                      onsubmit="return confirm('Are you sure you want to delete this course?');">
+                                      method="post">
+
+                                    @Html.AntiForgeryToken()
 
                                     <button type="submit"
-                                            class="btn btn-sm btn-outline-danger">
-                                        Delete
+                                            class="course-delete-button"
+                                            aria-label="Delete @course.CourseCode"
+                                            data-confirm-delete
+                                            data-confirm-title="Delete Course?"
+                                            data-confirm-message="Are you sure you want to delete this course? Courses with existing projects cannot be deleted."
+                                            data-confirm-button="Delete Course">
+                                        ×
                                     </button>
-                                </form>
-                            </td>
-                        }
-                    </tr>
-                }
-            </tbody>
-        </table>
-    </div>
-}
 
-<a asp-controller="Projects"
-   asp-action="Index"
-   class="btn btn-outline-secondary mt-3">
-    Back to Projects
-</a>
+                                </form>
+
+                            </div>
+                        }
+
+                    </article>
+                }
+            </div>
+        }
+    </section>
+
+    <div class="courses-back-link">
+        <a asp-controller="Projects" asp-action="Index">
+            <span>←</span> Back to Projects
+        </a>
+    </div>
+
+</div>
+
+<!-- DELETE CONFIRMATION MODAL -->
+<div id="deleteConfirmModal"
+     class="delete-confirm-modal"
+     aria-hidden="true">
+
+    <div class="delete-confirm-panel"
+         role="dialog"
+         aria-modal="true"
+         aria-labelledby="deleteConfirmTitle">
+
+        <div class="delete-confirm-header">
+            <span>PORTFOLIO / CONFIRMATION</span>
+            <span class="delete-warning-icon">!</span>
+        </div>
+
+        <div class="delete-confirm-body">
+
+            <span class="delete-confirm-eyebrow">
+                WARNING / DESTRUCTIVE ACTION
+            </span>
+
+            <h2 id="deleteConfirmTitle">
+                Delete <span>Course?</span>
+            </h2>
+
+            <p id="deleteConfirmMessage">
+                Are you sure you want to delete this course?
+                Courses with existing projects cannot be deleted.
+            </p>
+
+        </div>
+
+        <div class="delete-confirm-actions">
+
+            <button type="button"
+                    id="cancelDeleteButton"
+                    class="delete-cancel-button">
+                Cancel
+            </button>
+
+            <button type="button"
+                    id="confirmDeleteButton"
+                    class="delete-confirm-button">
+                Delete Course <span>→</span>
+            </button>
+
+        </div>
+
+        <div class="delete-confirm-footer">
+            PORTFOLIO SYSTEM / DELETE REQUEST
+        </div>
+
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+
+            // DELETE CONFIRMATION MODAL
+            const deleteModal = document.getElementById("deleteConfirmModal");
+            const deleteTitle = document.getElementById("deleteConfirmTitle");
+            const deleteMessage = document.getElementById("deleteConfirmMessage");
+
+            const cancelDeleteButton = document.getElementById("cancelDeleteButton");
+            const confirmDeleteButton = document.getElementById("confirmDeleteButton");
+
+            let pendingDeleteForm = null;
+
+            document.querySelectorAll("[data-confirm-delete]").forEach(button => {
+
+                button.addEventListener("click", function (event) {
+
+                    event.preventDefault();
+
+                    pendingDeleteForm = this.closest("form");
+
+                    deleteTitle.textContent = this.dataset.confirmTitle;
+                    deleteMessage.textContent = this.dataset.confirmMessage;
+
+                    const buttonText = this.dataset.confirmButton || "Delete";
+
+                    confirmDeleteButton.innerHTML =
+                        `${buttonText} <span>→</span>`;
+
+                    deleteModal.classList.add("active");
+                    deleteModal.setAttribute("aria-hidden", "false");
+
+                    document.body.style.overflow = "hidden";
+
+                    cancelDeleteButton.focus();
+
+                });
+
+            });
+
+            function closeDeleteModal() {
+
+                deleteModal.classList.remove("active");
+                deleteModal.setAttribute("aria-hidden", "true");
+
+                pendingDeleteForm = null;
+
+                document.body.style.overflow = "";
+
+            }
+
+            cancelDeleteButton.addEventListener("click", closeDeleteModal);
+
+            deleteModal.addEventListener("click", function (event) {
+
+                if (event.target === deleteModal) {
+                    closeDeleteModal();
+                }
+
+            });
+
+            confirmDeleteButton.addEventListener("click", function () {
+
+                if (pendingDeleteForm) {
+                    pendingDeleteForm.submit();
+                }
+
+            });
+
+            // ESCAPE KEY
+            document.addEventListener("keydown", function (event) {
+
+                if (event.key === "Escape" &&
+                    deleteModal.classList.contains("active")) {
+
+                    closeDeleteModal();
+
+                }
+
+            });
+
+        });
+    </script>
+}

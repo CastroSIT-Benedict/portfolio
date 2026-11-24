@@ -1,2 +1,609 @@
-﻿body {
+﻿
+/* =========================================
+   MANAGE COURSES
+========================================= */
+
+.courses-page {
+    position: relative;
+    width: min(1180px, 100%);
+    min-height: calc(100svh - 170px);
+    margin: 0 auto;
+    padding: 55px 20px 45px;
+}
+
+.courses-heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 25px;
+    margin-bottom: 55px;
+}
+
+.courses-eyebrow,
+.courses-section-label,
+.course-card-label,
+.course-code-label {
+    display: block;
+    color: var(--accent-red, #e32636);
+    font-family: var(--font-heading, sans-serif);
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+}
+
+.courses-heading h1 {
+    margin: 10px 0;
+    color: var(--text-primary, #f2f0f0);
+    font-family: var(--font-heading, sans-serif);
+    font-size: clamp(2.4rem, 5vw, 3.7rem);
+    font-weight: 800;
+    letter-spacing: -1px;
+}
+
+    .courses-heading h1 span {
+        color: var(--accent-red, #e32636);
+    }
+
+.courses-heading p {
+    margin: 0;
+    color: var(--text-muted, #a6a2a2);
+    font-size: 0.95rem;
+}
+
+.courses-add-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 9px;
+    padding: 13px 19px;
+    color: #fff;
+    background: var(--accent-red, #e32636);
+    border: 1px solid var(--accent-red, #e32636);
+    border-radius: 6px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    text-decoration: none;
+    white-space: nowrap;
+    transition: 0.25s ease;
+}
+
+    .courses-add-button:hover {
+        color: #fff;
+        background: #bd1e2c;
+        border-color: #bd1e2c;
+        box-shadow: 0 0 22px rgba(227, 38, 54, 0.25);
+        transform: translateY(-2px);
+    }
+
+    .courses-add-button span {
+        font-size: 1.2rem;
+        line-height: 1;
+    }
+
+/* Alert */
+
+.courses-alert {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 30px;
+    padding: 15px 18px;
+    color: #ffb8bd;
+    background: rgba(227, 38, 54, 0.09);
+    border: 1px solid rgba(227, 38, 54, 0.3);
+    border-radius: 7px;
+    font-size: 0.88rem;
+}
+
+    .courses-alert span {
+        display: grid;
+        width: 23px;
+        height: 23px;
+        flex-shrink: 0;
+        place-items: center;
+        color: #fff;
+        background: var(--accent-red, #e32636);
+        border-radius: 50%;
+        font-weight: 800;
+    }
+
+/* Course directory heading */
+
+.courses-content {
+    padding-top: 28px;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.courses-section-heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 25px;
+}
+
+    .courses-section-heading h2 {
+        margin: 7px 0 0;
+        color: var(--text-primary, #f2f0f0);
+        font-family: var(--font-heading, sans-serif);
+        font-size: 1.65rem;
+        font-weight: 700;
+    }
+
+.courses-count {
+    padding: 7px 11px;
+    color: #e8a1a6;
+    background: rgba(227, 38, 54, 0.09);
+    border: 1px solid rgba(227, 38, 54, 0.2);
+    border-radius: 4px;
+    font-family: var(--font-heading, sans-serif);
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    white-space: nowrap;
+}
+
+/* Course cards */
+
+.courses-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 18px;
+}
+
+.course-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    min-height: 245px;
+    padding: 22px;
+    overflow: hidden;
+    background: linear-gradient(145deg, rgba(227, 38, 54, 0.045), transparent 48%), #1c1c22;
+    border: 1px solid rgba(255, 255, 255, 0.075);
+    border-radius: 9px;
+    transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+    .course-card::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 38px;
+        height: 2px;
+        background: var(--accent-red, #e32636);
+        transition: width 0.3s ease;
+    }
+
+    .course-card:hover {
+        border-color: rgba(227, 38, 54, 0.4);
+        box-shadow: 0 12px 35px rgba(0, 0, 0, 0.22), 0 0 20px rgba(227, 38, 54, 0.06);
+        transform: translateY(-5px);
+    }
+
+        .course-card:hover::before {
+            width: 100%;
+        }
+
+.course-card-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+}
+
+.course-card-label {
+    font-size: 0.62rem;
+    letter-spacing: 1.5px;
+}
+
+.course-card-id {
+    color: rgba(255, 255, 255, 0.3);
+    font-family: var(--font-heading, sans-serif);
+    font-size: 0.75rem;
+    font-weight: 700;
+}
+
+.course-card-main {
+    flex: 1;
+    padding: 30px 0 25px;
+}
+
+.course-code-label {
+    color: #8e898b;
+    font-size: 0.6rem;
+    letter-spacing: 1.5px;
+}
+
+.course-card-main h3 {
+    margin: 8px 0;
+    color: var(--text-primary, #f2f0f0);
+    font-family: var(--font-heading, sans-serif);
+    font-size: clamp(1.7rem, 3vw, 2.1rem);
+    font-weight: 800;
+    overflow-wrap: anywhere;
+}
+
+.course-card-main p {
+    margin: 0;
+    color: var(--text-muted, #a6a2a2);
+    font-size: 0.85rem;
+    line-height: 1.6;
+}
+
+.course-card-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    padding-top: 15px;
+    border-top: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+    .course-card-actions form {
+        margin: 0;
+    }
+
+.course-edit-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    color: #e8a1a6;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+    .course-edit-button:hover {
+        color: #fff;
+    }
+
+    .course-edit-button span {
+        color: var(--accent-red, #e32636);
+        font-size: 1rem;
+    }
+
+.course-delete-button {
+    display: grid;
+    width: 32px;
+    height: 32px;
+    place-items: center;
+    color: #b7a0a2;
+    background: rgba(255, 255, 255, 0.035);
+    border: 1px solid rgba(255, 255, 255, 0.09);
+    border-radius: 5px;
+    font-size: 1.3rem;
+    line-height: 1;
+    cursor: pointer;
+    transition: 0.2s ease;
+}
+
+    .course-delete-button:hover {
+        color: #fff;
+        background: rgba(227, 38, 54, 0.8);
+        border-color: var(--accent-red, #e32636);
+    }
+
+/* Empty state */
+
+.courses-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 65px 20px;
+    text-align: center;
+    background: rgba(255, 255, 255, 0.018);
+    border: 1px dashed rgba(255, 255, 255, 0.12);
+    border-radius: 9px;
+}
+
+.courses-empty-icon {
+    display: grid;
+    width: 55px;
+    height: 55px;
+    margin-bottom: 17px;
+    place-items: center;
+    color: var(--accent-red, #e32636);
+    background: rgba(227, 38, 54, 0.1);
+    border-radius: 50%;
+    font-size: 1.8rem;
+}
+
+.courses-empty h3 {
+    color: var(--text-primary, #f2f0f0);
+    font-family: var(--font-heading, sans-serif);
+    font-size: 1.4rem;
+}
+
+.courses-empty p {
+    margin-bottom: 22px;
+    color: var(--text-muted, #a6a2a2);
+    font-size: 0.88rem;
+}
+
+/* Back link */
+
+.courses-back-link {
+    margin-top: 30px;
+}
+
+    .courses-back-link a {
+        display: inline-flex;
+        align-items: center;
+        gap: 9px;
+        color: #aaa4a5;
+        font-size: 0.82rem;
+        text-decoration: none;
+        transition: color 0.2s ease;
+    }
+
+        .courses-back-link a:hover {
+            color: #fff;
+        }
+
+    .courses-back-link span {
+        color: var(--accent-red, #e32636);
+        font-size: 1.1rem;
+    }
+
+/* =========================================
+   COURSE CREATE / EDIT FORMS
+========================================= */
+
+.course-editor-page .editor-panel {
+    max-width: 850px;
+    margin-right: auto;
+    margin-left: auto;
+}
+
+.course-editor-page .editor-heading {
+    max-width: 850px;
+    margin-right: auto;
+    margin-left: auto;
+}
+
+.course-editor-form {
+    grid-template-columns: 1fr 1fr;
+}
+
+    .course-editor-form .course-name-field {
+        grid-column: auto;
+    }
+
+/* =========================================
+   RESPONSIVE
+========================================= */
+
+@media (max-width: 900px) {
+    .courses-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 767.98px) {
+    .courses-page {
+        padding: 35px 15px;
+    }
+
+    .courses-heading {
+        align-items: flex-start;
+        flex-direction: column;
+        margin-bottom: 38px;
+    }
+
+    .courses-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .course-card {
+        min-height: 220px;
+    }
+
+    .course-editor-form {
+        grid-template-columns: 1fr;
+    }
+
+        .course-editor-form .editor-field:nth-of-type(2) {
+            grid-column: auto;
+        }
+}
+
+@media (max-width: 480px) {
+    .courses-section-heading {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .courses-add-button {
+        width: 100%;
+    }
+
+    .courses-heading h1 {
+        font-size: 2.5rem;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .course-card,
+    .course-card::before,
+    .courses-add-button,
+    .course-edit-button,
+    .course-delete-button {
+        transition: none;
+    }
+}
+
+
+/* =========================================
+   DELETE CONFIRMATION MODAL
+========================================= */
+
+.delete-confirm-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 5000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    background: rgba(0, 0, 0, 0.88);
+    backdrop-filter: blur(10px);
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity 0.25s ease, visibility 0.25s ease;
+}
+
+    .delete-confirm-modal.active {
+        opacity: 1;
+        visibility: visible;
+        pointer-events: auto;
+    }
+
+.delete-confirm-panel {
+    position: relative;
+    width: 100%;
+    max-width: 440px;
+    padding: 25px;
+    background: #17171e;
+    border: 1px solid rgba(227, 38, 54, 0.4);
+    border-radius: 12px;
+    box-shadow: 0 25px 80px rgba(0, 0, 0, 0.7), 0 0 35px rgba(227, 38, 54, 0.12);
+    transform: translateY(15px) scale(0.98);
+    transition: transform 0.25s ease;
+}
+
+.delete-confirm-modal.active .delete-confirm-panel {
+    transform: translateY(0) scale(1);
+}
+
+.delete-confirm-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-bottom: 18px;
+    color: var(--text-muted);
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.delete-warning-icon {
+    display: flex;
+    width: 32px;
+    height: 32px;
+    align-items: center;
+    justify-content: center;
+    color: var(--accent-red);
+    font-family: var(--font-heading);
+    font-size: 21px;
+    font-weight: 700;
+    background: rgba(227, 38, 54, 0.1);
+    border: 1px solid rgba(227, 38, 54, 0.4);
+    border-radius: 50%;
+}
+
+.delete-confirm-body {
+    padding: 28px 0;
+}
+
+.delete-confirm-eyebrow {
+    color: var(--accent-red);
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+}
+
+.delete-confirm-body h2 {
+    margin: 12px 0;
+    font-size: 34px;
+}
+
+    .delete-confirm-body h2 span {
+        color: var(--accent-red);
+    }
+
+.delete-confirm-body p {
+    margin: 0;
+    color: var(--text-secondary);
+    font-size: 13px;
+    line-height: 1.8;
+}
+
+.delete-confirm-actions {
+    display: flex;
+    gap: 12px;
+}
+
+    .delete-confirm-actions button {
+        flex: 1;
+        min-height: 45px;
+        padding: 10px 14px;
+        font-family: var(--font-body);
+        font-size: 11px;
+        font-weight: 700;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: var(--transition-smooth);
+    }
+
+.delete-cancel-button {
+    color: var(--text-secondary);
+    background: #222229;
+    border: 1px solid var(--border-color);
+}
+
+    .delete-cancel-button:hover {
+        color: white;
+        background: #303039;
+    }
+
+.delete-confirm-button {
+    color: white;
+    background: var(--accent-red);
+    border: 1px solid var(--accent-red);
+}
+
+    .delete-confirm-button:hover {
+        background: var(--accent-red-hover);
+        box-shadow: 0 0 20px rgba(227, 38, 54, 0.3);
+    }
+
+    .delete-confirm-button span {
+        margin-left: 5px;
+        font-size: 16px;
+    }
+
+.delete-confirm-footer {
+    margin-top: 22px;
+    padding-top: 15px;
+    color: var(--text-muted);
+    font-size: 8px;
+    font-weight: 700;
+    letter-spacing: 1.3px;
+    border-top: 1px solid var(--border-color);
+}
+
+/* Responsive */
+
+@media (max-width: 480px) {
+    .delete-confirm-panel {
+        padding: 21px;
+    }
+
+    .delete-confirm-actions {
+        flex-direction: column-reverse;
+    }
+}
+
+/* Reduced motion */
+
+@media (prefers-reduced-motion: reduce) {
+    .delete-confirm-modal,
+    .delete-confirm-panel,
+    .delete-confirm-actions button {
+        transition: none;
+    }
 }

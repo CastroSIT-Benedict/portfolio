@@ -5,101 +5,139 @@
     ViewData["Title"] = "Upload Project Image";
 }
 
-<section class="mb-4">
-    <h1>Upload Project Image</h1>
-    <p class="text-muted">
-        Add an image to <strong>@ViewBag.ProjectTitle</strong>.
-    </p>
-</section>
+@section Styles {
+    <link rel="stylesheet"
+          href="~/css/project-forms.css"
+          asp-append-version="true" />
+}
 
-<form asp-controller="Projects"
-      asp-action="UploadImage"
-      method="post"
-      enctype="multipart/form-data">
+<div class="editor-page">
+    <section class="editor-panel upload-panel">
 
-    @Html.AntiForgeryToken()
+        <header class="editor-heading">
+            <div>
+                <span class="editor-eyebrow">EDITOR / PROJECT GALLERY</span>
+                <h1>Upload Image</h1>
+                <p>Add a new visual to <strong>@ViewBag.ProjectTitle</strong>.</p>
+            </div>
 
-    <div asp-validation-summary="ModelOnly"
-         class="text-danger mb-3">
-    </div>
+            <span class="editor-panel-mark">MEDIA UPLOAD</span>
+        </header>
 
-    <input type="hidden" asp-for="ProjectId" />
+        <form asp-controller="Projects"
+              asp-action="UploadImage"
+              method="post"
+              enctype="multipart/form-data"
+              class="editor-form upload-form">
 
-    <div class="mb-3">
-        <label asp-for="ImageFile" class="form-label">
-            Select Image
-        </label>
+            @Html.AntiForgeryToken()
+
+            <input type="hidden" asp-for="ProjectId" />
+
+            <div asp-validation-summary="ModelOnly"
+                 class="editor-validation-summary">
+            </div>
+
+            
+<!-- IMAGE SELECTION -->
+<div class="editor-field upload-file-field">
+    <label asp-for="ImageFile">Select Image</label>
+
+    <label for="ImageFile" class="upload-dropzone">
+        <div class="upload-dropzone-content">
+            <span class="upload-icon">＋</span>
+            <strong>Choose an image</strong>
+            <span>JPG, PNG, or WebP · Maximum 5 MB</span>
+            <span class="upload-browse-text">Browse files</span>
+        </div>
 
         <input asp-for="ImageFile"
                type="file"
-               class="form-control"
                accept=".jpg,.jpeg,.png,.webp"
-               id="ImageFile" />
+               id="ImageFile"
+               class="upload-file-input" />
+    </label>
 
-        <span asp-validation-for="ImageFile"
-              class="text-danger"></span>
+    <span asp-validation-for="ImageFile"
+          class="editor-validation">
+    </span>
+</div>
 
-        <small class="text-muted">
-            Accepted formats: JPG, PNG, and WebP. Maximum size: 5 MB.
-        </small>
-    </div>
 
-    <!-- Image Preview -->
-    <div class="mb-3" id="previewContainer" style="display: none;">
-        <label class="form-label">Image Preview</label>
+            <!-- IMAGE PREVIEW -->
+            <div class="editor-field upload-preview-field">
+                <label>Image Preview</label>
 
-        <div class="card" style="max-width: 500px;">
-            <img id="imagePreview"
-                 src=""
-                 alt="Selected image preview"
-                 class="card-img-top"
-                 style="max-height: 300px; object-fit: contain; background: #f5f5f5;" />
+                <div id="previewContainer"
+                     class="upload-preview"
+                     hidden>
 
-            <div class="card-body">
-                <p class="card-text mb-0" id="fileName"></p>
+                    <div class="upload-preview-image">
+                        <img id="imagePreview"
+                             src=""
+                             alt="Selected image preview" />
+                    </div>
+
+                    <div class="upload-preview-info">
+                        <span class="upload-preview-status">
+                            SELECTED IMAGE
+                        </span>
+
+                        <p id="fileName"></p>
+                    </div>
+                </div>
+
+                <div id="previewPlaceholder"
+                     class="upload-preview-placeholder">
+                    <span class="upload-placeholder-icon">▧</span>
+                    <p>Your image preview will appear here.</p>
+                </div>
             </div>
-        </div>
-    </div>
 
-    <div class="mb-3">
-        <label asp-for="Caption" class="form-label">
-            Caption (Optional)
-        </label>
+            <!-- CAPTION -->
+            <div class="editor-field">
+                <label asp-for="Caption">Caption <span>(Optional)</span></label>
 
-        <input asp-for="Caption"
-               class="form-control"
-               placeholder="Describe this image..." />
+                <input asp-for="Caption"
+                       class="form-control"
+                       placeholder="Describe this image..." />
 
-        <span asp-validation-for="Caption"
-              class="text-danger"></span>
-    </div>
+                <span asp-validation-for="Caption"
+                      class="editor-validation">
+                </span>
+            </div>
 
-    <div class="mb-3">
-        <label asp-for="DisplayOrder" class="form-label">
-            Display Order
-        </label>
+            <!-- DISPLAY ORDER -->
+            <div class="editor-field">
+                <label asp-for="DisplayOrder">Display Order</label>
 
-        <input asp-for="DisplayOrder"
-               type="number"
-               min="1"
-               class="form-control" />
+                <input asp-for="DisplayOrder"
+                       type="number"
+                       min="1"
+                       class="form-control" />
 
-        <span asp-validation-for="DisplayOrder"
-              class="text-danger"></span>
-    </div>
+                <span asp-validation-for="DisplayOrder"
+                      class="editor-validation">
+                </span>
+            </div>
 
-    <div class="d-flex gap-2">
-        <button type="submit" class="btn btn-primary">
-            Upload Image
-        </button>
+            <!-- ACTIONS -->
+            <div class="editor-form-actions">
+                <a asp-controller="Projects"
+                   asp-action="Index"
+                   class="editor-cancel-button">
+                    Cancel
+                </a>
 
-        <a asp-controller="Projects"
-           asp-action="Index"
-           class="btn btn-outline-secondary">
-            Cancel
-        </a>
-    </div>
-</form>
+                <button type="submit"
+                        class="editor-save-button">
+                    Upload Image
+                </button>
+            </div>
+
+        </form>
+    </section>
+</div>
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
@@ -107,6 +145,7 @@
     <script>
         const imageInput = document.getElementById("ImageFile");
         const previewContainer = document.getElementById("previewContainer");
+        const previewPlaceholder = document.getElementById("previewPlaceholder");
         const imagePreview = document.getElementById("imagePreview");
         const fileName = document.getElementById("fileName");
 
@@ -121,7 +160,8 @@
             }
 
             if (!file) {
-                previewContainer.style.display = "none";
+                previewContainer.hidden = true;
+                previewPlaceholder.hidden = false;
                 imagePreview.src = "";
                 fileName.textContent = "";
                 return;
@@ -132,7 +172,14 @@
             imagePreview.src = currentImageUrl;
             fileName.textContent = file.name;
 
-            previewContainer.style.display = "block";
+            previewContainer.hidden = false;
+            previewPlaceholder.hidden = true;
+        });
+
+        window.addEventListener("beforeunload", function () {
+            if (currentImageUrl) {
+                URL.revokeObjectURL(currentImageUrl);
+            }
         });
     </script>
 }
