@@ -652,7 +652,7 @@
     position: relative;
     padding: 120px 7% 90px;
     overflow: hidden;
-    background: radial-gradient( circle at 90% 45%, rgba(227, 38, 54, 0.055), transparent 35% ), var(--background-secondary);
+    background: radial-gradient( circle at 90% 45%, rgba(227, 38, 54, 0.055), transparent 35% ), color-mix(in srgb, var(--background-secondary) 88%, transparent);
 }
 
 .about-container {
@@ -893,7 +893,7 @@
     position: relative;
     padding: 120px 7% 90px;
     overflow: hidden;
-    background: radial-gradient( circle at 10% 55%, rgba(227, 38, 54, 0.045), transparent 35% ), var(--background-main);
+    background: radial-gradient( circle at 10% 55%, rgba(227, 38, 54, 0.045), transparent 35% ), color-mix(in srgb, var(--background-main) 88%, transparent);
 }
 
 .skills-container {
@@ -1122,7 +1122,7 @@
     position: relative;
     padding: 120px 7% 90px;
     overflow: hidden;
-    background: radial-gradient(circle at 85% 50%, rgba(227, 38, 54, 0.05), transparent 35%), var(--background-secondary);
+    background: radial-gradient( circle at 85% 50%, rgba(227, 38, 54, 0.05), transparent 35% ), color-mix(in srgb, var(--background-secondary) 88%, transparent);
 }
 
 .education-container {
@@ -1377,7 +1377,7 @@
     position: relative;
     padding: 120px 7% 75px;
     overflow: hidden;
-    background: radial-gradient(circle at 15% 65%, rgba(227, 38, 54, 0.07), transparent 35%), var(--background-main);
+    background: radial-gradient( circle at 15% 65%, rgba(227, 38, 54, 0.07), transparent 35% ), color-mix(in srgb, var(--background-main) 88%, transparent);
 }
 
 .contact-container {
@@ -1806,41 +1806,89 @@
     box-shadow: 0 0 18px rgba(227, 38, 54, 0.2);
 }
 
-    /* The moving light streak */
+    
+
+/* ========================================
+   FLOATING NAVIGATION - ATTENTION EFFECT
+======================================== */
+
+.floating-nav-toggle {
+    position: relative;
+    isolation: isolate;
+    overflow: visible;
+    border: 1px solid rgba(255, 65, 80, 0.65);
+    background: linear-gradient(135deg, #e32636, #a91425);
+    box-shadow: 0 5px 25px rgba(227, 38, 54, 0.35), 0 0 0 5px rgba(227, 38, 54, 0.08);
+    animation: navFloat 3s ease-in-out infinite;
+}
+
+    /* Soft pulsing glow */
+
     .floating-nav-toggle::before {
         content: "";
         position: absolute;
-        width: 38px;
-        height: 3px;
-        border-radius: 50%;
-        background: linear-gradient( 90deg, transparent, #ff263f, #ffffff, #ff263f, transparent );
-        box-shadow: 0 0 6px #ff263f, 0 0 12px #ff263f, 0 0 20px rgba(255, 38, 63, 0.8);
-        offset-path: inset(-4px round 50px);
-        offset-distance: 0%;
-        offset-rotate: auto;
-        animation: travelAroundButton 3s linear infinite;
+        inset: 0;
+        z-index: 0;
+        border: 1px solid rgba(255, 255, 255, 0.45);
+        border-radius: inherit;
+        box-shadow: inset 0 0 12px rgba(255, 255, 255, 0.18);
+        animation: navPulse 2.5s ease-in-out infinite;
         pointer-events: none;
-        z-index: 5;
     }
 
-@keyframes travelAroundButton {
-    from {
-        offset-distance: 0%;
+    /* Small attention indicator */
+
+    .floating-nav-toggle::after {
+        content: "";
+        position: absolute;
+        top: 2px;
+        right: 5px;
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: #ffffff;
+        box-shadow: 0 0 6px #ffffff, 0 0 12px #ff263f;
+        pointer-events: none;
     }
 
-    to {
-        offset-distance: 100%;
+/* Gentle floating motion */
+
+@keyframes navFloat {
+    0%, 100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-4px);
     }
 }
 
-/* Hover effect */
+/* Expanding glow */
+
+@keyframes navPulse {
+    0%, 100% {
+        opacity: 0.35;
+        box-shadow: inset 0 0 5px rgba(255, 255, 255, 0.08);
+    }
+
+    50% {
+        opacity: 1;
+        box-shadow: inset 0 0 15px rgba(255, 255, 255, 0.28);
+    }
+}
+
+/* Stronger hover feedback */
+
 .floating-nav-toggle:hover {
-    border-color: #ff3548;
-    box-shadow: 0 0 20px rgba(227, 38, 54, 0.4), 0 0 40px rgba(227, 38, 54, 0.2);
-    transform: translateY(-3px);
+    animation-play-state: paused;
+    transform: translateY(-4px);
+    box-shadow: 0 8px 30px rgba(227, 38, 54, 0.55), 0 0 0 7px rgba(227, 38, 54, 0.12);
 }
+
+/* Accessibility */
 
 @media (prefers-reduced-motion: reduce) {
+    .floating-nav-toggle,
     .floating-nav-toggle::before {
         animation: none;
     }

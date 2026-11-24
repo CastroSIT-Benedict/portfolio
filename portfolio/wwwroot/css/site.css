@@ -37,7 +37,7 @@ body {
     min-height: 100vh;
     margin: 0;
     background-color: var(--background-main);
-    background-image: radial-gradient( circle at 15% 15%, rgba(227, 38, 54, 0.07), transparent 30% ), radial-gradient( circle at 85% 55%, rgba(227, 38, 54, 0.035), transparent 35% );
+    background-image: radial-gradient(circle at 15% 15%, rgba(227, 38, 54, 0.07), transparent 30%), radial-gradient(circle at 85% 55%, rgba(227, 38, 54, 0.035), transparent 35%);
     color: var(--text-primary);
     font-family: var(--font-body);
     font-size: 15px;
@@ -118,6 +118,151 @@ a {
     }
 }
 
+/* ========================================
+   PAGE TRANSITIONS
+======================================== */
+
+/* TRANSITION OVERLAY */
+
+.page-transition {
+    position: fixed;
+    inset: 0;
+    z-index: 99999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 18px;
+    background: #09090d;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    overflow: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+    /* Show overlay before navigation */
+
+    .page-transition.active {
+        opacity: 1;
+        visibility: visible;
+        pointer-events: all;
+    }
+
+    /* RED LIGHT SWEEP */
+
+    .page-transition::before {
+        content: "";
+        position: absolute;
+        top: -20%;
+        left: -100%;
+        width: 70%;
+        height: 140%;
+        background: linear-gradient( 90deg, transparent, rgba(227, 38, 54, 0.04), rgba(227, 38, 54, 0.2), rgba(227, 38, 54, 0.04), transparent );
+        transform: skewX(-18deg);
+        opacity: 0;
+    }
+
+    .page-transition.active::before {
+        animation: transitionLightSweep 0.65s ease forwards;
+    }
+
+    /* SUBTLE RED GLOW */
+
+    .page-transition::after {
+        content: "";
+        position: absolute;
+        width: 350px;
+        height: 350px;
+        border-radius: 50%;
+        background: rgba(227, 38, 54, 0.09);
+        filter: blur(100px);
+        opacity: 0;
+        transition: opacity 0.4s ease;
+    }
+
+    .page-transition.active::after {
+        opacity: 1;
+    }
+
+/* LOADING INDICATOR */
+
+.transition-loader {
+    position: relative;
+    z-index: 1;
+    width: 42px;
+    height: 42px;
+    border: 2px solid rgba(255, 255, 255, 0.12);
+    border-top-color: var(--accent-red);
+    border-right-color: rgba(227, 38, 54, 0.45);
+    border-radius: 50%;
+    animation: transitionSpin 0.8s linear infinite;
+    box-shadow: 0 0 20px rgba(227, 38, 54, 0.12);
+}
+
+/* LOADING TEXT */
+
+.transition-label {
+    position: relative;
+    z-index: 1;
+    color: var(--text-secondary);
+    font-family: var(--font-heading);
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+}
+
+    .transition-label span {
+        color: var(--accent-red);
+    }
+
+/* PAGE ENTRANCE */
+
+body.page-entering .site-header,
+body.page-entering .site-main,
+body.page-entering .site-footer {
+    animation: pageReveal 0.55s ease both;
+}
+
+body.page-entering .site-main {
+    animation-delay: 0.05s;
+}
+
+@keyframes transitionSpin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes transitionLightSweep {
+    0% {
+        left: -100%;
+        opacity: 0;
+    }
+
+    20% {
+        opacity: 1;
+    }
+
+    100% {
+        left: 150%;
+        opacity: 0;
+    }
+}
+
+@keyframes pageReveal {
+    from {
+        opacity: 0;
+        transform: translateY(12px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
 /* REDUCED MOTION ACCESSIBILITY */
 
 @media (prefers-reduced-motion: reduce) {
@@ -131,5 +276,90 @@ a {
         animation-duration: 0.01ms !important;
         animation-iteration-count: 1 !important;
         transition-duration: 0.01ms !important;
+    }
+
+    .page-transition {
+        display: none;
+    }
+}
+/* ========================================
+   SCROLL REVEAL ANIMATIONS
+======================================== */
+
+.reveal {
+    opacity: 0;
+    transform: translateY(28px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+    will-change: opacity, transform;
+}
+
+    .reveal.is-visible {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+/* Slight stagger for grouped components */
+.reveal-delay-1 {
+    transition-delay: 0.1s;
+}
+
+.reveal-delay-2 {
+    transition-delay: 0.2s;
+}
+
+.reveal-delay-3 {
+    transition-delay: 0.3s;
+}
+
+.reveal-delay-4 {
+    transition-delay: 0.4s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .reveal,
+    .reveal.is-visible {
+        opacity: 1;
+        transform: none;
+        transition: none;
+        will-change: auto;
+    }
+}
+
+/* ========================================
+   CURSOR FOLLOWING RED GLOW
+======================================== */
+
+body::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: 9998;
+    pointer-events: none;
+
+    background: radial-gradient(
+        450px circle at var(--cursor-x, -1000px) var(--cursor-y, -1000px),
+        rgba(255, 35, 55, 0.10),
+        rgba(180, 0, 25, 0.045) 35%,
+        transparent 70%
+    );
+
+    opacity: 0;
+    transition: opacity 0.35s ease;
+    mix-blend-mode: screen;
+}
+
+body.cursor-glow-active::after {
+    opacity: 1;
+}
+
+@media (hover: none), (pointer: coarse) {
+    body::after {
+        display: none;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    body::after {
+        display: none;
     }
 }

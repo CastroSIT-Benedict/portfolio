@@ -1,0 +1,38 @@
+﻿/* ========================================
+   INTERACTIVE POLYGON BACKGROUND
+======================================== */
+
+body {
+    isolation: isolate;
+}
+
+#background-polygons {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    pointer-events: none;
+    display: block;
+    opacity: 0.8;
+}
+
+/* Keep page content above the polygon canvas */
+.site-header,
+.site-main,
+.site-footer {
+    position: relative;
+    z-index: 1;
+}
+
+/* Keep the page transition above everything */
+.page-transition {
+    z-index: 99999;
+}
+
+/* Disable movement for reduced-motion users */
+@media (prefers-reduced-motion: reduce) {
+    #background-polygons {
+        display: none;
+    }
+}

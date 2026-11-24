@@ -24,18 +24,27 @@ public class ProjectsController : Controller
     }
 
     // Display all projects.
+
     public async Task<IActionResult> Index()
     {
         var projects = await _projects.GetAllAsync();
 
+        var projectIds = projects
+            .Select(project => project.ProjectId)
+            .ToList();
+
+        var images = await _projects.GetImagesByProjectsAsync(projectIds);
+
         foreach (var project in projects)
         {
-            project.Images = await _projects.GetImagesByProjectAsync(
-                project.ProjectId);
+            project.Images = images.TryGetValue(project.ProjectId, out var projectImages)
+                ? projectImages
+                : new List<ProjectImage>();
         }
 
         return View(projects);
     }
+
 
     // Display the Create form.
     [Authorize(Roles = "Editor")]

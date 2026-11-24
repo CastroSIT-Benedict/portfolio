@@ -1,4 +1,5 @@
-﻿@model List<portfolio.Models.Project>
+﻿
+@model List<portfolio.Models.Project>
 
 @{
     ViewData["Title"] = "Projects";
@@ -86,6 +87,36 @@
     }
 
     <!-- PROJECT CONTENT -->
+
+    <!-- PROJECT SEARCH -->
+    @if (Model.Count > 0)
+    {
+        <div class="project-search">
+            <div class="project-search-heading">
+                <span class="admin-label">PROJECT ARCHIVE</span>
+                <p>Find a project from your collection.</p>
+            </div>
+
+            <div class="project-search-box">
+                <span class="project-search-icon">⌕</span>
+
+                <input type="search"
+                       id="projectSearch"
+                       placeholder="Search projects, descriptions, or courses..."
+                       aria-label="Search projects" />
+
+                <button type="button"
+                        id="clearProjectSearch"
+                        aria-label="Clear search">
+                    ×
+                </button>
+            </div>
+
+            <p class="project-search-status" id="projectSearchStatus" aria-live="polite"></p>
+        </div>
+    }
+
+
     @if (Model.Count == 0)
     {
         <div class="projects-empty">
@@ -100,10 +131,14 @@
 
             @foreach (var course in Model.GroupBy(p => new { p.CourseCode, p.CourseName }))
             {
-                <section class="course-section">
+                <section class="course-section"
+                         data-course-search="@course.Key.CourseCode @course.Key.CourseName">
 
                     <!-- COURSE HEADER -->
-                    <div class="course-header">
+                    <button type="button"
+                            class="course-header course-toggle"
+                            aria-expanded="false"
+                            aria-controls="course-projects-@course.Key.CourseCode">
 
                         <div class="course-heading">
                             <span class="course-label">COURSE / CATEGORY</span>
@@ -113,20 +148,29 @@
                             <p>@course.Key.CourseName</p>
                         </div>
 
-                        <div class="course-count">
-                            <span>@course.Count().ToString("00")</span>
-                            <small>PROJECT@(course.Count() == 1 ? "" : "S")</small>
+                        <div class="course-header-actions">
+                            <div class="course-count">
+                                <span>@course.Count().ToString("00")</span>
+                                <small>PROJECT@(course.Count() == 1 ? "" : "S")</small>
+                            </div>
+
+                            <span class="course-toggle-icon" aria-hidden="true">+</span>
                         </div>
 
-                    </div>
+                    </button>
 
                     <!-- PROJECT GRID -->
-                    <div class="projects-grid">
+                    <div class="course-projects"
+                         id="course-projects-@course.Key.CourseCode"
+                         hidden>
+
+                        <div class="projects-grid">
 
                         @foreach (var project in course)
                         {
                             <!-- PROJECT PREVIEW CARD -->
-                            <article class="project-card">
+                                <article class="project-card"
+                                         data-project-search="@project.Title @project.Description">
 
                                 <div class="project-card-top">
                                     <span class="project-number">
@@ -164,6 +208,7 @@
                                     <span>PORTFOLIO ENTRY</span>
                                     <span>///</span>
                                 </div>
+
 
                             </article>
 
@@ -361,6 +406,7 @@
                             </div>
                         }
 
+                        </div>
                     </div>
 
                 </section>
@@ -461,6 +507,7 @@
             const lightboxClose = document.getElementById("lightboxClose");
 
             const deleteModal = document.getElementById("deleteConfirmModal");
+            document.body.appendChild(deleteModal);
             const deleteTitle = document.getElementById("deleteConfirmTitle");
             const deleteMessage = document.getElementById("deleteConfirmMessage");
 
@@ -489,22 +536,43 @@
             }
 
             // FULL PROJECT OVERLAY
-            function openProject(overlay) {
 
+            // Return an overlay to the project grid it came from.
+            function restoreOverlay(overlay) {
+
+                if (!overlay.originalParent || overlay.parentElement !== document.body) return;
+
+                overlay.originalParent.insertBefore(
+                    overlay,
+                    overlay.originalNextSibling
+                );
+            }
+
+            function openProject(overlay) {
                 if (!overlay) return;
 
                 activeProjectOverlay = overlay;
 
+                // Only record the original position if the overlay is still in the grid.
+                // If it is reopened while still closing, it is already in <body>.
+                if (overlay.parentElement !== document.body) {
+                    overlay.originalParent = overlay.parentElement;
+                    overlay.originalNextSibling = overlay.nextSibling;
+
+                    document.body.appendChild(overlay);
+                }
+
+                // Let the browser apply the overlay's initial hidden state first.
+                overlay.getBoundingClientRect();
+
+                // Now activate it so the CSS transition can run.
                 overlay.classList.add("active");
                 overlay.setAttribute("aria-hidden", "false");
 
                 document.body.classList.add("project-overlay-open");
-
                 updateScrollLock();
 
-                const closeButton =
-                    overlay.querySelector(".project-overlay-close");
-
+                const closeButton = overlay.querySelector(".project-overlay-close");
                 closeButton?.focus();
             }
 
@@ -512,15 +580,26 @@
 
                 if (!activeProjectOverlay) return;
 
-                activeProjectOverlay.classList.remove("active");
-                activeProjectOverlay.setAttribute("aria-hidden", "true");
+                const overlay = activeProjectOverlay;
+
+                overlay.classList.remove("active");
+                overlay.setAttribute("aria-hidden", "true");
 
                 activeProjectOverlay = null;
 
                 document.body.classList.remove("project-overlay-open");
 
                 updateScrollLock();
+
+                // Normally the overlay is returned in the transitionend handler below,
+                // after the fade-out finishes. With reduced motion there is no transition
+                // (and so no transitionend event), so return it immediately.
+                if (parseFloat(getComputedStyle(overlay).transitionDuration) === 0) {
+                    restoreOverlay(overlay);
+                }
             }
+
+          
 
             projectOpenButtons.forEach(button => {
 
@@ -542,12 +621,25 @@
 
                 closeButton?.addEventListener("click", closeProject);
 
+
+
                 overlay.addEventListener("click", function (event) {
 
                     if (event.target === overlay) {
                         closeProject();
                     }
 
+                });
+
+                overlay.addEventListener("transitionend", function (event) {
+
+                    // Ignore transitions of child elements and of properties other than opacity.
+                    if (event.target !== overlay || event.propertyName !== "opacity") return;
+
+                    // Opening also fires this event, and the overlay may have been reopened mid-close.
+                    if (overlay.classList.contains("active")) return;
+
+                    restoreOverlay(overlay);
                 });
 
             });
@@ -673,6 +765,246 @@
             });
 
             // SUCCESS MESSAGE AUTO-DISMISS
+            // ========================================
+            // COURSE ACCORDION
+            // ========================================
+
+            const courseSections = document.querySelectorAll(".course-section");
+
+            const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+
+            // Animates the section's height (and its top padding) between two sizes.
+            function animateCourseHeight(content, fromHeight, fromPadding, toHeight, toPadding, duration, onDone) {
+
+                // Clip overflowing content only while the animation runs,
+                // so card hover shadows are not clipped the rest of the time.
+                content.style.overflow = "hidden";
+
+                const animation = content.animate(
+                    [
+                        { height: fromHeight + "px", paddingTop: fromPadding + "px" },
+                        { height: toHeight + "px", paddingTop: toPadding + "px" }
+                    ],
+                    { duration: duration, easing: "ease" }
+                );
+
+                content._heightAnimation = animation;
+
+                animation.onfinish = function () {
+                    content._heightAnimation = null;
+                    content.style.overflow = "";
+
+                    if (onDone) onDone();
+                };
+            }
+
+            function setCourseOpen(section, isOpen, animate = false) {
+                const toggle = section.querySelector(".course-toggle");
+                const content = section.querySelector(".course-projects");
+
+                toggle.setAttribute("aria-expanded", isOpen ? "true" : "false");
+
+                const instant = !animate || prefersReducedMotion.matches;
+
+                // Stop any height animation in progress, remembering how tall the section is right now.
+                let startHeight = null;
+                let startPadding = null;
+
+                if (content._heightAnimation) {
+                    const current = getComputedStyle(content);
+                    startHeight = parseFloat(current.height);
+                    startPadding = parseFloat(current.paddingTop);
+
+                    content._heightAnimation.onfinish = null;
+                    content._heightAnimation.cancel();
+                    content._heightAnimation = null;
+                    content.style.overflow = "";
+                }
+
+                if (isOpen) {
+                    const wasHidden = content.hidden;
+
+                    content.classList.remove("closing");
+                    content.hidden = false;
+
+                    // Nothing to animate: instant mode, or it was already fully open.
+                    if (instant || (!wasHidden && startHeight === null)) return;
+
+                    const natural = getComputedStyle(content);
+
+                    animateCourseHeight(
+                        content,
+                        startHeight ?? 0,
+                        startPadding ?? 0,
+                        parseFloat(natural.height),
+                        parseFloat(natural.paddingTop),
+                        300
+                    );
+
+                    return;
+                }
+
+                // Closing
+                if (content.hidden) return;
+
+                if (instant) {
+                    content.classList.remove("closing");
+                    content.hidden = true;
+                    return;
+                }
+
+                const natural = getComputedStyle(content);
+
+                content.classList.add("closing");
+
+                animateCourseHeight(
+                    content,
+                    startHeight ?? parseFloat(natural.height),
+                    startPadding ?? parseFloat(natural.paddingTop),
+                    0,
+                    0,
+                    250,
+                    function () {
+                        content.classList.remove("closing");
+                        content.hidden = true;
+                    }
+                );
+            }
+
+            
+
+            courseSections.forEach(section => {
+                const toggle = section.querySelector(".course-toggle");
+
+                toggle.addEventListener("click", function () {
+                    // Search results can have multiple expanded courses.
+                    if (projectSearch.value.trim() !== "") {
+                        const isOpen = toggle.getAttribute("aria-expanded") === "true";
+                        setCourseOpen(section, !isOpen, true);
+                        return;
+                    }
+
+                    const isCurrentlyOpen =
+                        toggle.getAttribute("aria-expanded") === "true";
+
+                    // Close every course first.
+                    courseSections.forEach(otherSection => {
+                        setCourseOpen(otherSection, false, true);
+                    });
+
+                    // Open the selected course if it was previously closed.
+                    if (!isCurrentlyOpen) {
+                        setCourseOpen(section, true, true);
+                    }
+                });
+            });
+
+            // ========================================
+            // PROJECT SEARCH
+            // ========================================
+
+            const projectSearch = document.getElementById("projectSearch");
+            const clearProjectSearch = document.getElementById("clearProjectSearch");
+            const projectSearchStatus = document.getElementById("projectSearchStatus");
+            const projectsCollection = document.querySelector(".projects-collection");
+
+            let searchEmptyMessage = null;
+
+            function searchProjects() {
+                const query = projectSearch.value.trim().toLowerCase();
+                const searching = query.length > 0;
+
+                let totalMatches = 0;
+                let matchingCourses = 0;
+
+                clearProjectSearch.classList.toggle("visible", searching);
+
+                courseSections.forEach(section => {
+                    const courseText =
+                        section.dataset.courseSearch.toLowerCase();
+
+                    const courseMatches = courseText.includes(query);
+
+                    const cards = section.querySelectorAll(".project-card");
+
+                    let courseMatchesCount = 0;
+
+                    cards.forEach(card => {
+                        const projectText =
+                            card.dataset.projectSearch.toLowerCase();
+
+                        const projectMatches =
+                            !searching ||
+                            courseMatches ||
+                            projectText.includes(query);
+
+                        card.hidden = !projectMatches;
+
+                        if (projectMatches) {
+                            courseMatchesCount++;
+                            totalMatches++;
+                        }
+                    });
+
+                    const hasMatches = courseMatchesCount > 0;
+
+                    section.hidden = !hasMatches;
+
+                    if (hasMatches) {
+                        matchingCourses++;
+
+                        // Show matching results while searching.
+                        if (searching) {
+                            setCourseOpen(section, true);
+                        }
+                    } else {
+                        setCourseOpen(section, false);
+                    }
+                });
+
+                // Remove the no-results message when it is no longer needed.
+                if (searchEmptyMessage) {
+                    searchEmptyMessage.remove();
+                    searchEmptyMessage = null;
+                }
+
+                if (searching) {
+                    projectSearchStatus.textContent =
+                        `${totalMatches} project(s) found in ${matchingCourses} course(s).`;
+
+                    if (totalMatches === 0) {
+                        projectSearchStatus.textContent = "No matching projects found.";
+
+                        searchEmptyMessage = document.createElement("div");
+                        searchEmptyMessage.className = "projects-search-empty";
+
+                        searchEmptyMessage.innerHTML = `
+                        <h3>No Projects Found</h3>
+                        <p>Try another project title, description, or course name.</p>
+                    `;
+
+                        projectsCollection.appendChild(searchEmptyMessage);
+                    }
+                } else {
+                    projectSearchStatus.textContent = "";
+
+                    // Return to the default collapsed view.
+                    courseSections.forEach(section => {
+                        setCourseOpen(section, false);
+                    });
+                }
+            }
+
+            if (projectSearch) {
+                projectSearch.addEventListener("input", searchProjects);
+
+                clearProjectSearch.addEventListener("click", function () {
+                    projectSearch.value = "";
+                    searchProjects();
+                    projectSearch.focus();
+                });
+            }
+
             document.querySelectorAll(".auto-dismiss").forEach(alert => {
 
                 setTimeout(() => {

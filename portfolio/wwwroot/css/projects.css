@@ -1,6 +1,7 @@
 ﻿
 /* ==========================================
-   PROJECTS PAGE
+   1. PROJECTS PAGE
+   Sets the overall page width and bottom spacing.
 ========================================== */
 
 .projects-page {
@@ -9,7 +10,8 @@
 }
 
 /* ==========================================
-   PAGE HERO
+   2. PAGE HERO
+   Styles the page introduction and decorative elements.
 ========================================== */
 
 .projects-hero {
@@ -98,7 +100,8 @@
     }
 
 /* ==========================================
-   ALERTS
+   3. ALERTS
+   Styles success/error messages and their dismissal effect.
 ========================================== */
 
 .project-alert {
@@ -138,7 +141,8 @@
 }
 
 /* ==========================================
-   ADMIN TOOLBAR
+   4. ADMIN TOOLBAR
+   Styles the editor controls for managing projects.
 ========================================== */
 
 .project-admin-toolbar {
@@ -213,7 +217,8 @@
         }
 
 /* ==========================================
-   EMPTY STATE
+   5. EMPTY STATE
+   Displays the message shown when there are no projects.
 ========================================== */
 
 .projects-empty {
@@ -243,7 +248,8 @@
 }
 
 /* ==========================================
-   COURSE SECTIONS
+   6. COURSE SECTIONS
+   Groups project cards under their course headings.
 ========================================== */
 
 .projects-collection {
@@ -251,7 +257,7 @@
 }
 
 .course-section {
-    margin-bottom: 75px;
+    margin-bottom: 22px;
 }
 
 .course-header {
@@ -323,7 +329,8 @@
     }
 
 /* ==========================================
-   PROJECT GRID
+   7. PROJECT GRID
+   Controls the columns and spacing between project cards.
 ========================================== */
 
 .projects-grid {
@@ -333,7 +340,8 @@
 }
 
 /* ==========================================
-   PROJECT CARD
+   8. PROJECT CARD
+   Styles each project's main card and its content.
 ========================================== */
 
 .project-card {
@@ -431,7 +439,8 @@
 }
 
 /* ==========================================
-   PROJECT LINKS
+   9. PROJECT LINKS
+   Styles external links such as GitHub and video links.
 ========================================== */
 
 .project-links {
@@ -468,7 +477,8 @@
 }
 
 /* ==========================================
-   EXPAND PROJECT
+   10. EXPAND PROJECT
+   Styles the expandable project details area.
 ========================================== */
 
 .project-expand-button {
@@ -556,7 +566,8 @@
     }
 
 /* ==========================================
-   PROJECT GALLERY
+   11. PROJECT GALLERY
+   Styles project thumbnails, captions, and image controls.
 ========================================== */
 
 .project-gallery-section {
@@ -652,7 +663,8 @@
     }
 
 /* ==========================================
-   EDITOR ACTIONS
+   12. EDITOR ACTIONS
+   Styles edit, upload, and delete controls.
 ========================================== */
 
 .project-editor-actions {
@@ -717,7 +729,8 @@
     }
 
 /* ==========================================
-   CARD FOOTER
+   13. CARD FOOTER
+   Styles the bottom strip of each project card.
 ========================================== */
 
 .project-card-bottom {
@@ -734,7 +747,8 @@
 }
 
 /* ==========================================
-   IMAGE LIGHTBOX
+   14. IMAGE LIGHTBOX
+   Displays a selected project image in an enlarged view.
 ========================================== */
 
 .image-lightbox {
@@ -799,7 +813,8 @@
     }
 
 /* ==========================================
-   ANIMATIONS
+   15. ANIMATIONS
+   Defines the lightbox entrance animation.
 ========================================== */
 
 @keyframes lightboxFadeIn {
@@ -813,7 +828,8 @@
 }
 
 /* ==========================================
-   RESPONSIVE
+   16. RESPONSIVE LAYOUTS
+   Adjusts the page for tablet and mobile screen sizes.
 ========================================== */
 
 @media (max-width: 991px) {
@@ -954,7 +970,8 @@
 }
 
 /* ==========================================
-   REDUCED MOTION ACCESSIBILITY
+   17. REDUCED MOTION
+   Reduces decorative motion for accessibility preferences.
 ========================================== */
 
 @media (prefers-reduced-motion: reduce) {
@@ -976,7 +993,8 @@
 
 
 /* ==========================================
-   FULL SCREEN PROJECT OVERLAY
+   18. PROJECT OVERLAY
+   Styles the full-screen project details panel.
 ========================================== */
 
 .project-overlay {
@@ -987,7 +1005,7 @@
     justify-content: center;
     align-items: center;
     padding: 35px;
-    background: rgba(0, 0, 0, 0.92);
+    background: radial-gradient(circle at 50% 0%, rgba(255, 48, 48, 0.08), transparent 55%), rgba(0, 0, 0, 0.92);
     backdrop-filter: blur(12px);
     opacity: 0;
     visibility: hidden;
@@ -1175,7 +1193,10 @@
 }
 
     .overlay-image-item .project-thumbnail {
+        width: 100%;
         height: 260px;
+        object-fit: cover;
+        background: #181818;
     }
 
     .overlay-image-item > p {
@@ -1266,7 +1287,8 @@ body.project-overlay-open {
 
 
 /* ==========================================
-   INTERACTION POLISH
+   19. INTERACTION POLISH
+   Adds keyboard focus styles and small visual refinements.
 ========================================== */
 
 .project-admin-button:focus-visible,
@@ -1280,18 +1302,6 @@ body.project-overlay-open {
 .lightbox-close:focus-visible {
     outline: 2px solid #ff4545;
     outline-offset: 4px;
-}
-
-/* Subtle lighting inside the project overlay */
-.project-overlay {
-    background: radial-gradient( circle at 50% 0%, rgba(255, 48, 48, 0.08), transparent 55% ), rgba(0, 0, 0, 0.92);
-}
-
-/* Improve image presentation */
-.overlay-image-item .project-thumbnail {
-    width: 100%;
-    object-fit: cover;
-    background: #181818;
 }
 
 /* Prevent long project titles from breaking the layout */
@@ -1313,9 +1323,10 @@ body.project-overlay-open {
 }
 
 
-/* ========================================
-   DELETE CONFIRMATION MODAL
-======================================== */
+/* ==========================================
+   20. DELETE CONFIRMATION MODAL
+   Styles the confirmation dialog before deleting a project.
+========================================== */
 
 .delete-confirm-modal {
     position: fixed;
@@ -1482,3 +1493,237 @@ body.project-overlay-open {
     }
 }
 
+/* ==========================================
+   21. PROJECT SEARCH
+   Styles the search field, clear button, and result status.
+========================================== */
+
+.project-search {
+    margin: 35px 0 30px;
+}
+
+.project-search-heading {
+    margin-bottom: 15px;
+}
+
+    .project-search-heading p {
+        color: #929292;
+        font-size: 0.85rem;
+        margin: 5px 0 0;
+    }
+
+.project-search-box {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    width: 100%;
+    max-width: 650px;
+    min-height: 58px;
+    padding: 0 18px;
+    background: rgba(255, 255, 255, 0.035);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 7px;
+    transition: border-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+    .project-search-box:focus-within {
+        border-color: rgba(255, 48, 48, 0.65);
+        box-shadow: 0 0 20px rgba(255, 48, 48, 0.08);
+    }
+
+.project-search-icon {
+    color: #ff4545;
+    font-size: 1.7rem;
+}
+
+.project-search-box input {
+    flex: 1;
+    min-width: 0;
+    color: #f2f2f2;
+    background: transparent;
+    border: none;
+    outline: none;
+    font: inherit;
+    font-size: 0.9rem;
+}
+
+    .project-search-box input::placeholder {
+        color: #777;
+    }
+
+#clearProjectSearch {
+    display: none;
+    color: #aaa;
+    background: transparent;
+    border: none;
+    font-size: 1.6rem;
+    cursor: pointer;
+}
+
+    #clearProjectSearch.visible {
+        display: block;
+    }
+
+    #clearProjectSearch:hover {
+        color: #ff4545;
+    }
+
+.project-search-status {
+    min-height: 18px;
+    margin: 9px 0 0;
+    color: #888;
+    font-size: 0.8rem;
+}
+
+/* ==========================================
+   22. COURSE ACCORDION
+   Styles expandable course headings and their project lists.
+========================================== */
+
+/* Course accordion rules continue below. */
+.course-toggle {
+    width: 100%;
+    padding: 22px 0;
+    margin-bottom: 0;
+    color: inherit;
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    text-align: left;
+    cursor: pointer;
+    transition: border-color 0.25s ease;
+}
+
+    .course-toggle:hover {
+        border-bottom-color: rgba(255, 48, 48, 0.5);
+    }
+
+    .course-toggle:focus-visible {
+        outline: 2px solid #ff4545;
+        outline-offset: 5px;
+    }
+
+.course-header-actions {
+    display: flex;
+    align-items: center;
+    gap: 25px;
+}
+
+.course-toggle-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 38px;
+    height: 38px;
+    flex-shrink: 0;
+    color: #ff4545;
+    border: 1px solid rgba(255, 48, 48, 0.35);
+    border-radius: 50%;
+    font-size: 1.5rem;
+    transition: transform 0.3s ease, background 0.3s ease;
+}
+
+.course-toggle[aria-expanded="true"] .course-toggle-icon {
+    transform: rotate(45deg);
+    background: rgba(255, 48, 48, 0.1);
+}
+
+.course-projects {
+    padding-top: 25px;
+}
+
+    .course-projects[hidden] {
+        display: none;
+    }
+
+    .course-projects .projects-grid {
+        animation: courseProjectsReveal 0.3s ease both;
+    }
+
+@keyframes courseProjectsReveal {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.course-projects.closing .projects-grid {
+    animation: courseProjectsHide 0.25s ease both;
+}
+
+@keyframes courseProjectsHide {
+    from {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    to {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+}
+
+.course-section[hidden],
+.project-card[hidden] {
+    display: none !important;
+}
+
+.projects-search-empty {
+    padding: 45px 20px;
+    text-align: center;
+    border: 1px dashed rgba(255, 255, 255, 0.12);
+    border-radius: 8px;
+}
+
+    .projects-search-empty h3 {
+        color: #f2f2f2;
+        font-family: 'Rajdhani', sans-serif;
+        font-size: 1.6rem;
+    }
+
+    .projects-search-empty p {
+        color: #888;
+        margin: 0;
+    }
+
+@media (max-width: 767px) {
+    .course-toggle {
+        gap: 12px;
+    }
+
+    .course-header-actions {
+        gap: 12px;
+    }
+
+    .course-toggle-icon {
+        width: 32px;
+        height: 32px;
+    }
+
+    .project-search-box {
+        min-height: 54px;
+        padding: 0 13px;
+    }
+
+        .project-search-box input {
+            font-size: 0.82rem;
+        }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .course-toggle-icon,
+    .course-toggle,
+    .project-search-box {
+        transition: none;
+    }
+
+    .course-projects .projects-grid,
+    .course-projects.closing .projects-grid {
+        animation: none;
+    }
+}
