@@ -206,16 +206,18 @@
             transform: translateY(-2px);
         }
 
+
     .project-admin-button.secondary {
-        color: #d0d0d0;
-        border: 1px solid rgba(255, 255, 255, 0.15);
+        color: var(--text-secondary);
+        border: 1px solid var(--border-color);
         background: transparent;
     }
 
         .project-admin-button.secondary:hover {
-            color: #fff;
-            border-color: #ff3030;
+            color: var(--text-primary);
+            border-color: var(--border-red);
         }
+
 
 /* ==========================================
    5. EMPTY STATE

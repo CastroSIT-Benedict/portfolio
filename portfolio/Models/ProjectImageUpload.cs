@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿
+using Microsoft.AspNetCore.Http;
 using System.ComponentModel.DataAnnotations;
 
 namespace portfolio.Models;
@@ -8,12 +9,9 @@ public class ProjectImageUpload
     [Required]
     public long ProjectId { get; set; }
 
-    [Required(ErrorMessage = "Please select an image.")]
-    public IFormFile? ImageFile { get; set; }
+    public List<IFormFile> ImageFiles { get; set; } = new();
 
-    [StringLength(200)]
-    public string? Caption { get; set; }
+    public List<string?> Captions { get; set; } = new();
 
-    [Range(1, int.MaxValue)]
-    public int DisplayOrder { get; set; } = 1;
+    public List<int> DisplayOrders { get; set; } = new();
 }
