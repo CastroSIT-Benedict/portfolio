@@ -1,7 +1,7 @@
 ﻿
 using Microsoft.AspNetCore.Http;
 using System.Net.Http.Headers;
-using System.Net.Http.Json;
+
 
 namespace portfolio.Services;
 
@@ -97,7 +97,9 @@ public class SupabaseStorageService
             $"{_supabaseUrl.TrimEnd('/')}/storage/v1/object/public/{Uri.EscapeDataString(_bucket)}/";
 
         // Make sure the URL belongs to our configured bucket.
-        if (!publicUrl.StartsWith(publicPrefix, StringComparison.OrdinalIgnoreCase))
+        if (!publicUrl.StartsWith(
+            publicPrefix,
+            StringComparison.OrdinalIgnoreCase))
         {
             throw new InvalidOperationException(
                 "The image URL does not belong to the configured storage bucket.");
@@ -121,11 +123,18 @@ public class SupabaseStorageService
             $"{_supabaseUrl.TrimEnd('/')}/storage/v1/object/{bucket}/{encodedPath}";
 
         using var request = new HttpRequestMessage(
-            HttpMethod.Delete, deleteUrl);
+            HttpMethod.Delete,
+            deleteUrl);
 
         request.Headers.Add("apikey", _secretKey);
 
         using var response = await _httpClient.SendAsync(request);
+
+        // A missing file is treated as already deleted.
+        if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
+        {
+            return;
+        }
 
         if (!response.IsSuccessStatusCode)
         {

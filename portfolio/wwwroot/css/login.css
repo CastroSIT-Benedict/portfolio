@@ -356,3 +356,20 @@
         transition: none;
     }
 }
+
+.login-rate-limit-warning {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    padding: 14px 16px;
+    margin-bottom: 20px;
+    border: 1px solid #e5a3a3;
+    border-radius: 8px;
+    background: #fff1f1;
+    color: #8b2525;
+    font-size: 0.9rem;
+}
+
+    .login-rate-limit-warning strong {
+        font-weight: 700;
+    }

@@ -1,7 +1,8 @@
-using portfolio.Data;
-using Npgsql;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Npgsql;
+using portfolio.Data;
 using portfolio.Services;
+using System.Threading.RateLimiting;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -43,6 +44,36 @@ builder.Services
 
 builder.Services.AddAuthorization();
 
+// Limit repeated login attempts.
+builder.Services.AddRateLimiter(options =>
+{
+    options.AddPolicy("login", context =>
+    {
+        var ipAddress = context.Connection.RemoteIpAddress?.ToString()
+            ?? "unknown";
+
+        return RateLimitPartition.GetFixedWindowLimiter(
+            ipAddress,
+            _ => new FixedWindowRateLimiterOptions
+            {
+                PermitLimit = 5,
+                Window = TimeSpan.FromMinutes(1),
+                QueueLimit = 0,
+                AutoReplenishment = true
+            });
+    });
+
+    options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
+
+    options.OnRejected = async (context, cancellationToken) =>
+    {
+        context.HttpContext.Response.Redirect(
+            "/Account/Login?tooManyAttempts=true");
+
+        await Task.CompletedTask;
+    };
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -54,6 +85,8 @@ if (!app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseRouting();
+
+app.UseRateLimiter();
 
 app.UseAuthentication();
 app.UseAuthorization();

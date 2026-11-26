@@ -13,14 +13,18 @@ public class ProjectsController : Controller
     private readonly CourseRepository _courses;
     private readonly SupabaseStorageService _storage;
 
+    private readonly ILogger<ProjectsController> _logger;
+
     public ProjectsController(
-        ProjectRepository projects,
-        CourseRepository courses,
-        SupabaseStorageService storage)
+    ProjectRepository projects,
+    CourseRepository courses,
+    SupabaseStorageService storage,
+    ILogger<ProjectsController> logger)
     {
         _projects = projects;
         _courses = courses;
         _storage = storage;
+        _logger = logger;
     }
 
     // Display all projects.
@@ -67,9 +71,29 @@ public class ProjectsController : Controller
             return View(project);
         }
 
-        await _projects.AddAsync(project);
+        try
+        {
+            await _projects.AddAsync(project);
 
-        return RedirectToAction(nameof(Index));
+            TempData["Success"] = "Project created successfully.";
+
+            return RedirectToAction(nameof(Index));
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(
+                ex,
+                "Failed to create project {ProjectTitle}.",
+                project.Title);
+
+            ModelState.AddModelError(
+                "",
+                "We couldn't create the project. Please check your information and try again.");
+
+            ViewBag.Courses = await _courses.GetAllAsync();
+
+            return View(project);
+        }
     }
 
     // Display the Edit form.
@@ -106,9 +130,34 @@ public class ProjectsController : Controller
             return View(project);
         }
 
-        await _projects.UpdateAsync(project);
+        try
+        {
+            var updated = await _projects.UpdateAsync(project);
 
-        return RedirectToAction(nameof(Index));
+            if (!updated)
+            {
+                return NotFound();
+            }
+
+            TempData["Success"] = "Project updated successfully.";
+
+            return RedirectToAction(nameof(Index));
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(
+                ex,
+                "Failed to update project {ProjectId}.",
+                project.ProjectId);
+
+            ModelState.AddModelError(
+                "",
+                "We couldn't update the project. Please check your information and try again.");
+
+            ViewBag.Courses = await _courses.GetAllAsync();
+
+            return View(project);
+        }
     }
 
     // Display the image upload form.
@@ -208,8 +257,13 @@ public class ProjectsController : Controller
                 model.ProjectId,
                 file);
         }
-        catch (HttpRequestException)
+        catch (HttpRequestException ex)
         {
+            _logger.LogError(
+                ex,
+                "Failed to upload an image for project {ProjectId}.",
+                model.ProjectId);
+
             ModelState.AddModelError(
                 "",
                 "We couldn't upload your image. Please check the file and try again.");
@@ -218,22 +272,90 @@ public class ProjectsController : Controller
         }
 
         // Save image information in PostgreSQL.
-        await _projects.AddImageAsync(
-            model.ProjectId,
-            uploaded.PublicUrl,
-            model.Caption,
-            model.DisplayOrder);
+        try
+        {
+            await _projects.AddImageAsync(
+                model.ProjectId,
+                uploaded.PublicUrl,
+                model.Caption,
+                model.DisplayOrder);
+        }
+        catch (Exception ex)
+        {
+            // Record the database insertion failure.
+            _logger.LogError(
+                ex,
+                "Failed to save image information for project {ProjectId}.",
+                model.ProjectId);
+
+            // Attempt to remove the uploaded file from Supabase.
+            try
+            {
+                await _storage.DeleteAsync(uploaded.PublicUrl);
+            }
+            catch (Exception cleanupEx)
+            {
+                // Record the cleanup failure separately.
+                _logger.LogError(
+                    cleanupEx,
+                    "Failed to clean up uploaded image for project {ProjectId}.",
+                    model.ProjectId);
+            }
+
+            ModelState.AddModelError(
+                "",
+                "We couldn't save your image. Please try again.");
+
+            return View(model);
+        }
 
         return RedirectToAction(nameof(Index));
     }
 
-    // Delete a project.
+    // Delete a project and its associated images.
     [Authorize(Roles = "Editor")]
     [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Delete(long id)
     {
-        await _projects.DeleteAsync(id);
+        var images = await _projects.GetImagesByProjectAsync(id);
+
+        try
+        {
+            foreach (var image in images)
+            {
+                // Delete the actual image from Supabase Storage.
+                await _storage.DeleteAsync(image.ImageUrl);
+
+                // Delete its database record.
+                await _projects.DeleteImageAsync(image.ImageId);
+            }
+
+            // Delete the project after all images are handled.
+            await _projects.DeleteAsync(id);
+
+            TempData["Success"] = "Project deleted successfully.";
+        }
+        catch (HttpRequestException ex)
+        {
+            _logger.LogError(
+                ex,
+                "Failed to delete an image from storage while deleting project {ProjectId}.",
+                id);
+
+            TempData["Error"] =
+                "The project could not be deleted because an image could not be removed from storage. Please try again.";
+        }
+        catch (InvalidOperationException ex)
+        {
+            _logger.LogError(
+                ex,
+                "Invalid storage URL encountered while deleting project {ProjectId}.",
+                id);
+
+            TempData["Error"] =
+                "The project could not be deleted because an image has an invalid storage URL.";
+        }
 
         return RedirectToAction(nameof(Index));
     }
@@ -261,10 +383,36 @@ public class ProjectsController : Controller
 
             TempData["Success"] = "Image deleted successfully.";
         }
-        catch (HttpRequestException)
+        catch (HttpRequestException ex)
         {
+            _logger.LogError(
+                ex,
+                "Failed to delete image {ImageId} from storage.",
+                imageId);
+
             TempData["Error"] =
                 "The image could not be deleted from storage. Please try again.";
+        }
+        catch (InvalidOperationException ex)
+        {
+            _logger.LogError(
+                ex,
+                "Invalid storage URL encountered while deleting image {ImageId}.",
+                imageId);
+
+            TempData["Error"] =
+                "The image could not be deleted because its storage URL is invalid.";
+        }
+
+        catch (Exception ex)
+        {
+            _logger.LogError(
+                ex,
+                "Failed to delete database record for image {ImageId}.",
+                imageId);
+
+            TempData["Error"] =
+                "The image file may have been removed, but its database record could not be deleted. Please try again.";
         }
 
         return RedirectToAction(nameof(Index));

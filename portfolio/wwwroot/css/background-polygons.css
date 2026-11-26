@@ -18,7 +18,13 @@ body {
 }
 
 /* Keep page content above the polygon canvas */
-.site-header,
+
+.site-header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
 .site-main,
 .site-footer {
     position: relative;

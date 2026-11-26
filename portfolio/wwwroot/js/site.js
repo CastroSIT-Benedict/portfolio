@@ -221,33 +221,30 @@ document.addEventListener("DOMContentLoaded", function () {
         }, 320);
 
     });
+        // Restore the page when using browser Back or Forward.
+    window.addEventListener("pageshow", function (event) {
 
-});
+        // Only reset when the browser restores a cached page.
+        if (!event.persisted) {
+            return;
+        }
 
+        // Allow navigation clicks again.
+        isTransitioning = false;
 
-// ========================================
-// BROWSER BACK / FORWARD RESTORATION
-// ========================================
-
-window.addEventListener("pageshow", function (event) {
-
-    // Only reset when the browser restores a cached page.
-    // Do not interrupt the normal entrance animation.
-    if (!event.persisted) {
-        return;
-    }
-
-    const transitionOverlay = document.getElementById("page-transition");
-
-    if (transitionOverlay) {
+        // Hide the transition overlay.
         transitionOverlay.classList.remove("active");
         transitionOverlay.setAttribute("aria-hidden", "true");
-    }
 
-    document.body.classList.remove("page-leaving");
-    document.body.classList.remove("page-entering");
+        // Remove the leaving state.
+        document.body.classList.remove("page-leaving");
+
+    });
 
 });
+
+
+
 // ========================================
 // SCROLL REVEAL ANIMATIONS
 // ========================================

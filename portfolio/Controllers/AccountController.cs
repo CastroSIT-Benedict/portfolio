@@ -7,6 +7,9 @@ using portfolio.Models;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
+using System.Threading.RateLimiting;
+using Microsoft.AspNetCore.RateLimiting;
+using Microsoft.AspNetCore.RateLimiting;
 
 namespace portfolio.Controllers;
 
@@ -21,15 +24,20 @@ public class AccountController : Controller
 
     [AllowAnonymous]
     [HttpGet]
-    public IActionResult Login(string? returnUrl = null)
+    public IActionResult Login(
+    string? returnUrl = null,
+    bool tooManyAttempts = false)
     {
         ViewData["ReturnUrl"] = returnUrl;
+        ViewBag.TooManyAttempts = tooManyAttempts;
+
         return View();
     }
 
     [AllowAnonymous]
     [HttpPost]
     [ValidateAntiForgeryToken]
+    [EnableRateLimiting("login")]
     public async Task<IActionResult> Login(
         LoginViewModel model, string? returnUrl = null)
     {

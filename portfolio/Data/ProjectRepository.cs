@@ -171,7 +171,7 @@ namespace portfolio.Data
         // Updates the details of an existing project.
         // =========================================================
 
-        public async Task UpdateAsync(Project project)
+        public async Task<bool> UpdateAsync(Project project)
         {
             const string sql = """
                 UPDATE portfolio.project
@@ -211,7 +211,9 @@ namespace portfolio.Data
                 Value = (object?)project.ProjectDate ?? DBNull.Value
             });
 
-            await command.ExecuteNonQueryAsync();
+            var rowsAffected = await command.ExecuteNonQueryAsync();
+
+            return rowsAffected > 0;
         }
 
 
